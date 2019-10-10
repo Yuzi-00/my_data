@@ -38,6 +38,8 @@ data_plate01 <- select(data_plate01, plate, raw, col, time, OD) %>%
   arrange(raw)
 # ordering the column names and arrange by the raw
 
+write_csv(data_plate01, "data/tidydata/plate01.csv")
+
 
 
 
