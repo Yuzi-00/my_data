@@ -2,68 +2,41 @@ library(tidyverse)
 
 library(readxl)
 
-data_t0 <- read_excel("data/20190910_DNS plate01-t0min.xlsx",
-                      range = "A15:M23") 
+filename1 <- "C:/Users/WAN333/Documents/Thesis/Experiments/2019-09/20190910_Hydrolysis Plate 01/raw data/20190910_DNS plate01-t"
+filename2 <- 'min.xlsx'
+# assigning the unchangeable part of the path
 
-data_t20 <- read_excel("data/20190910_DNS plate01-t20min.xlsx",
-                      range = "A15:M23") 
+filetime <- c('20','60','120','180','240', '360', '1440', '1800') 
+# assigning the changeable part of the path
 
-data_t60 <- read_excel("data/20190910_DNS plate01-t60min.xlsx",
-                      range = "A15:M23") 
+data_plate01 <- read_excel(paste0(filename1,'0',filename2), range = "A15:M23") 
+# read the 1st spreadsheet et and assign it to a new dataframe
 
-data_t120 <- read_excel("data/20190910_DNS plate01-t120min.xlsx",
-                      range = "A15:M23") 
+data_plate01 <- mutate(data_plate01, plate = 1, time = 0)
+# add two columns: plate number and time point for the 1st spreadsheet
 
-data_t180 <- read_excel("data/20190910_DNS plate01-t180min.xlsx",
-                      range = "A15:M23") 
+for (fltime in filetime) {
+  filename_real <- paste0(filename1,fltime,filename2)
+  print(filename_real)
+  temp_data <- read_excel(filename_real, range = "A15:M23",na = 'NA')
+  temp_data <- mutate(temp_data,  plate = 1, time = as.numeric(fltime))
+  data_plate01 <- bind_rows(data_plate01, temp_data)
+}
+# creat a loop to import all the spreadsheet
+# add two columns: plate number and time point from the 2nd spreadsheet on 
+# bind them by raws
 
-data_t240 <- read_excel("data/20190910_DNS plate01-t240min.xlsx",
-                      range = "A15:M23") 
 
-data_t360 <- read_excel("data/20190910_DNS plate01-t360min.xlsx",
-                      range = "A15:M23") 
-
-data_t1440 <- read_excel("data/20190910_DNS plate01-t1440min.xlsx",
-                      range = "A15:M23") 
-
-data_t1800 <- read_excel("data/20190910_DNS plate01-t1800min.xlsx",
-                      range = "A15:M23") 
-
-# import the data from excel by choosing just A15 to M23
-# save each of them to a new data frame
-
-data_t0 <- mutate(data_t0, time = 0)
-
-data_t20 <-mutate(data_t20, time = 20)
-
-data_t60 <-mutate(data_t60, time = 60)
-
-data_t120 <-mutate(data_t120, time = 120)
-
-data_t180 <-mutate(data_t180, time = 180)
-
-data_t240 <-mutate(data_t240, time = 240)
-
-data_t360 <-mutate(data_t360, time = 360)
-
-data_t1440 <-mutate(data_t1440, time = 1440)
-
-data_t1800 <-mutate(data_t1800, time = 1800)
-
-# adding a column indicating the time point
-
-total_data <- bind_rows(data_t0, data_t20, data_t60, data_t120, data_t180, data_t240, 
-                        data_t360,data_t1440, data_t1800) %>% 
-  rename(raw = ...1) 
-
-# combining all the data together
+data_plate01 <- rename(data_plate01, raw = ...1) 
 # modify the default name for the first col & raw
 
-total_data_transfered <- gather(total_data, col, OD, -raw, -time) %>% 
-  mutate(plate = 1)
 
+data_plate01 <- gather(data_plate01, col, OD, -raw, -plate, -time) 
 # transfer the data into two columns 
-# adding a column indicating the plate number
+
+data_plate01 <- select(data_plate01, plate, raw, col, time, OD) %>% 
+  arrange(raw)
+# ordering the column names and arrange by the raw
 
 
 
