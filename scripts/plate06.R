@@ -2,7 +2,7 @@ library(tidyverse)
 
 library(readxl)
 
-filename1 <- "C:/Users/WAN333/Documents/Thesis/Experiments/2019-09/20190910_Hydrolysis Plate 01/raw data/20190910_DNS plate01-t"
+filename1 <- "C:/Users/WAN333/Documents/Thesis/Experiments/2019-10/20191004_Hydrolysis Plate 06/raw data/20191004_DNS plate06-t"
 filename2 <- 'min.xlsx'
 # assigning the unchangeable part of the path
 
@@ -18,7 +18,7 @@ data_plate06 <- mutate(data_plate06, plate = 6, time = 0)
 for (fltime in filetime) {
   filename_real <- paste0(filename1,fltime,filename2)
   print(filename_real)
-  temp_data <- read_excel(filename_real, range = "A15:M23",na = 'NA')
+  temp_data <- read_excel(filename_real, range = "A15:M23", na = 'NA')
   temp_data <- mutate(temp_data,  plate = 6, time = as.numeric(fltime))
   data_plate06 <- bind_rows(data_plate06, temp_data)
 }
@@ -38,6 +38,10 @@ data_plate06 <- select(data_plate06, plate, raw, col, time, OD) %>%
 # ordering the column names and arrange by the raw
 
 write_csv(data_plate06, "data/tidydata/plate06.csv")
+
+filter(data_plate06, OD == "NA") # doesn't work ?
+
+filter(data_plate06, time == 240)
 
 
 
