@@ -48,3 +48,4 @@ df %>%
          # extract the number
          watertable_text = sub("[^0-9]*([0-9\\.]*)(.*)", "\\2", df$watertable))
 # extract the string
+
