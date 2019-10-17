@@ -39,9 +39,16 @@ data_plate06 <- select(data_plate06, plate, raw, col, time, OD) %>%
 
 write_csv(data_plate06, "data/tidydata/plate06.csv")
 
-filter(data_plate06, OD == "NA") # doesn't work ?
+filter(data_plate06,is.na(OD)) %>% 
+  nrow()
+# can't compare(==) NA, for ex, if you enter in the console NA == NA, it will give you NA
+# so you can't actually compare a missing data
+# use the function is.na(), put the col name within the ()
+# if you want all the data expect for the NA, just put a ! in front of the is.na()
+  # other option to filter the NA is: filter(data_plate06, OD %in% NA)
+  
 
-filter(data_plate06, time == 240)
+
 
 
 
