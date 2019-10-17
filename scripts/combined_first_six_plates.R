@@ -48,6 +48,9 @@ write_csv(data_first_six_plates, "data/tidydata/data_first_six_plates.csv")
 write_csv(design_first_six_plate, "data/tidydata/design_first_six_plates.csv")
 # save the design of the first six plates
 
-joined_data_first_six_plates <- full_join(data_first_six_plates, design_first_six_plate)
+joined_data_first_six_plates <- full_join(data_first_six_plates, design_first_six_plate) %>% 
+  select(Plate, Row, ColPair, Col, Sample, WellGroup, WellGroupType, Time, OD)
+# join the data with the design for the first six plates
+# order the cols
 
 write_csv(joined_data_first_six_plates, "data/tidydata/joined_data_first_six_plates.csv")
