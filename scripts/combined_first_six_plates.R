@@ -62,3 +62,5 @@ mass <- select(mass_first_six_plates, mass)
 total_data_first_six_plates <-  bind_cols(joined_data_design_first_six_plates, mass) %>% 
   select(Plate, Row, ColPair, Col, Sample, WellGroup, WellGroupType, mass, Time, OD) %>% 
   rename(Mass = mass)
+
+write_csv(total_data_first_six_plates, "data/tidydata/total_data_first_six_plates.csv")
