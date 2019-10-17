@@ -81,8 +81,8 @@ Blank <- add_blk %>%
   rename(OD_blk = OD) %>% # rename the cols
   select(OD_blk) # remove that blank col
 
-total_data_first_six_plates <- bind_cols(Sample, Blank)
+total_data_6P <- bind_cols(Sample, Blank)
 # bind the Sample and the Blank together by cols
 
-write_csv(total_data_first_six_plates, "data/tidydata/total_data_first_six_plates.csv")
+write_csv(total_data_6P, "data/tidydata/total_data_6P.csv")
 # save the final dataset
