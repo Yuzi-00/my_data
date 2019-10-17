@@ -4,8 +4,8 @@ design <- read_csv("data/design/design_with_time.csv")
 
 design_first_six_plate <- design %>% 
   filter(Plate %in% 1:6) # logical vector operator: which element of the Plate are 1 to 6
-# just keep the first 6 plates (5184 observations: 8(raw)*12(col)*9(measurements/time points)*6(plates))
-
+# just keep the first 6 plates 
+# (5184 observations: 8(raw)*12(col)*9(measurements/time points)*6(plates))
 
 # design %>% filter(Plate %in% 1:6)
 
@@ -17,7 +17,7 @@ plate <- c('02', '03', '04', '05', '06')
 
 # alternative: plate <- c(02:06)
 
-data_first_six_plates <- read_csv(paste0(filename1,'01',filename2)) 
+data_first_six_plates <- read_csv(paste0(filename1, '01', filename2)) 
 # read the 1st spreadsheet et and assign it to a new dataframe
 
 for (plt in plate) {
@@ -36,10 +36,18 @@ for (plt in plate) {
 # temp_data <- read_csv(filename_real)
 # data_first_six_plates <- bind_rows(data_plate01, temp_data)
 
-data_first_six_plates 
+data_first_six_plates <- data_first_six_plates %>% 
+  rename(Plate = plate, Row = raw, Col = col, Time = time)
 
+design_first_six_plate <- design_first_six_plate %>% 
+  rename(Col = Column)
 
+write_csv(data_first_six_plates, "data/tidydata/data_first_six_plates.csv")
+# save the data of the first six plates
 
+write_csv(design_first_six_plate, "data/tidydata/design_first_six_plates.csv")
+# save the design of the first six plates
 
+joined_data_first_six_plates <- full_join(data_first_six_plates, design_first_six_plate)
 
-
+write_csv(joined_data_first_six_plates, "data/tidydata/joined_data_first_six_plates.csv")
