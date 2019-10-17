@@ -62,5 +62,27 @@ mass <- select(mass_first_six_plates, mass)
 total_data_first_six_plates <-  bind_cols(joined_data_design_first_six_plates, mass) %>% 
   select(Plate, Row, ColPair, Col, Sample, WellGroup, WellGroupType, mass, Time, OD) %>% 
   rename(Mass = mass)
+# rename all the cols to be the same pattern as the design
+
+add_blk <-  total_data_first_six_plates %>% 
+  mutate(blank = Col %% 2 == 0) # %% is to check if there is something left over
+# for ex, 5 %% 2 should give us 1 
+# add a new col to distinguish the sample and the blank 
+# so that we can use it to filter our dataset
+
+Sample <- add_blk %>% 
+  filter(blank == FALSE) %>% # just keep the sample cols
+  rename(OD_sample = OD) %>% # rename the cols 
+  select(-blank) # remove that blank col
+
+
+Blank <- add_blk %>% 
+  filter(blank == TRUE) %>% # just keep the blank cols
+  rename(OD_blk = OD) %>% # rename the cols
+  select(OD_blk) # remove that blank col
+
+total_data_first_six_plates <- bind_cols(Sample, Blank)
+# bind the Sample and the Blank together by cols
 
 write_csv(total_data_first_six_plates, "data/tidydata/total_data_first_six_plates.csv")
+# save the final dataset
