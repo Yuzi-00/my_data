@@ -93,5 +93,5 @@ slope <- read_xlsx("C:/Users/WAN333/Documents/Thesis/Experiments/raw_data/slope.
 total_data_6P_slope <- inner_join(total_data_6P, slope)
 # join the slope with the previous total data using inner_join
 
-write_csv(total_data_6P, "data/tidydata/total_data_6P_slope.csv")
+write_csv(total_data_6P_slope, "data/tidydata/total_data_6P_slope.csv")
 # save the final dataset
