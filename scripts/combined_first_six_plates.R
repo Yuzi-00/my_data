@@ -95,3 +95,29 @@ total_data_6P_slope <- inner_join(total_data_6P, slope)
 
 write_csv(total_data_6P_slope, "data/tidydata/total_data_6P_slope.csv")
 # save the final dataset
+
+design_name <- read_xlsx("C:/Users/WAN333/Documents/Thesis/Thesis infomation/MAGIC population/Data_MAGIC Population/Design name starch_flour.xlsx")
+# read in the data that contains the id and the sample name
+
+design_renamed <- design_name %>% 
+  rename(Sample = "Sample Name", ID = id) # rename the cols 
+                                         # to be consistant with the tidy dataset
+
+design_filted <- design_renamed %>% 
+  filter(ID != "NA") # remove the NA within the col ID
+
+with_id <- left_join(total_data_6P_slope, design_filted) # join the previous dataset with id
+
+AmyCon <- read_xlsx("C:/Users/WAN333/Documents/Thesis/Thesis infomation/MAGIC population/Data_MAGIC Population/AmyloseContentData_Flour.xlsx")
+# read in the dataset of the amylose content
+
+Amy_selected <- AmyCon %>% 
+  select(ID, `amylose content estimate`) %>% # select just the id and the AMY cols
+  group_by(ID) %>% # group by ID
+  summarise(mean_amy = mean(`amylose content estimate`)) # clculate the mean value for each id
+
+with_amy <- left_join(with_id, Amy_selected) # join the amylose content into the previous dataset
+
+write_csv(with_amy, "data/tidydata/total_6P_with_amy.csv")
+
+
