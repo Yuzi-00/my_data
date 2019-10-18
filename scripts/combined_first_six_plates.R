@@ -1,5 +1,7 @@
 library(tidyverse)
 
+library(readxl)
+
 design <- read_csv("data/design/design_with_time.csv")
 
 design_first_six_plate <- design %>% 
@@ -84,5 +86,12 @@ Blank <- add_blk %>%
 total_data_6P <- bind_cols(Sample, Blank)
 # bind the Sample and the Blank together by cols
 
-write_csv(total_data_6P, "data/tidydata/total_data_6P.csv")
+slope <- read_xlsx("C:/Users/WAN333/Documents/Thesis/Experiments/raw_data/slope.xlsx"，
+                   range = "A2:C56")
+# read in the data from the standard curve (maltose), and save it to a new variable slope
+
+total_data_6P_slope <- inner_join(total_data_6P, slope)
+# join the slope with the previous total data using inner_join
+
+write_csv(total_data_6P, "data/tidydata/total_data_6P_slope.csv")
 # save the final dataset
