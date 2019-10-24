@@ -13,6 +13,7 @@ cal_6P <- data_6P %>%
          HE = C / (10 / 0.9) * 100) # calculate the hydrolysis extent
                                   # in theory, the HE should be 10/0.9 = 11 g/L
 
+
 cal_6P_filted <- cal_6P %>% 
   filter(Mass_sample != 0 & Mass_blk != 0) # remove the empty samples
 # 5 samples have been removed here, which is correct. Empty samples: 178, 101, 146, 49, 107
@@ -105,3 +106,14 @@ low_HE_2nd <- cal_6P_2nd_filted %>%
 
 sample_92 <- cal_6P_filted %>% 
   filter(Sample == 92, Time == 1800) # check on sample 92
+
+
+#####################################################################################################
+
+# PS: calculating the variation of blk to see if we can use the average of it while doing the calculation
+
+
+x <- cal_6P %>% 
+  group_by(Plate, Time) %>% 
+  summarise(mean_blk = mean(OD_blk), sd_blk = sd(OD_blk), cov = sd_blk / mean_blk * 100)
+# most of the variation are < 10%
