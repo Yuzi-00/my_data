@@ -9,35 +9,40 @@ filename2 <- '.xlsx'
 filenumber <- c('02', '03', '04', '05', '06') 
 # assigning the changeable part of the path, other methods ???
 
-data_plate01 <- read_excel(paste0(filename1,'01',filename2), range = "A1:M9") 
+data_plate01 <- read_excel(paste0(filename1,'01',filename2), range = "A1:M9") %>% 
+  mutate(Plate = "01")
 # read the 1st spreadsheet et and assign it to a new dataframe
 
 for (flnum in filenumber) {
   filename_real <- paste0(filename1,flnum,filename2)
   print(filename_real)
   temp_data <- read_excel(filename_real, range = "A1:M9")
+  temp_data <- mutate(temp_data, Plate = flnum) # adding plate numbers
   data_plate01 <- bind_rows(data_plate01, temp_data)
 }
 # creat a loop to import all the spreadsheet
 # add column: plate number from the 2nd spreadsheet on 
 # bind them by raws
 
-data_plate01 <- rename(data_plate01, raw = ...1) 
-# modify the default name for the first col & raw
+data_6P <- data_plate01 %>% 
+  mutate(Plate = sub("0", "", data_plate01$Plate))
+# removing the 0 in the plate numbers and renaming the dataset
 
-mass_first_six_plates <- data_plate01 %>%  
-  gather(col, mass, -raw) 
-# transfer the data into two columns 
+data_6P <- rename(data_6P, row = ...1) 
+# replacing the default name by "row" 
 
-mass_first_six_plates <- select(mass_first_six_plates, raw, col, mass) %>% 
-  arrange(raw)
+data_6P_gathered <- data_6P %>%  
+  gather(col, mass, -row, -Plate) 
+# transfer the data into two columns, remaining the row and Plate unchanged
+
+data_6P_ordered <- select(data_6P_gathered, Plate, row, col, mass) %>% 
+  arrange(Plate, row)
 # ordering the column names and arrange by the raw
 
-mass_first_six_plates  <- mass_first_six_plates[rep(seq_len(nrow(mass_first_six_plates)), 
-                                                    each = 9), ] 
+mass_6P  <- data_6P_ordered[rep(seq_len(nrow(data_6P_ordered)), each = 9), ] 
 # in order to join this dataset with the other two, each row has to repete 9 times 
 
-write_csv(mass_first_six_plates, "data/tidydata/mass_first_six_plates.csv")
+write_csv(mass_6P, "data/tidydata/mass_6P.csv")
 
 
 
