@@ -48,59 +48,6 @@ low_HE <- cal_6P_filted %>%
 sample_92 <- cal_6P_filted %>% 
   filter(Sample == 92, Time == 1800) # check on sample 92
 
-######################################################################################################
-
-# if we just retain one decimal after the decimal mark for Slope
-
-library(tidyverse)
-
-data_6P_bis <- read_csv("data/tidydata/data_6P_without_cal.csv")
-# import the final dataset
-
-cal_6P_bis <- data_6P_bis %>% 
-  mutate(Slope = round(Slope, 1)) %>% # retain just one digit after the mark
-  mutate(C_sample = OD_sample / Slope, # calculate the concentration
-         C_blk = OD_blk / Slope,
-         C_spl_nor = 10 * C_sample / Mass_sample, # calculate the concentration by normalising 
-         # the mass at 10 mg
-         C_blk_nor = 10 * C_blk / Mass_blk,
-         C = C_spl_nor - C_blk_nor,
-         HE = C / (10 / 0.9) * 100)
-
-cal_6P_filtered_bis <- cal_6P_bis %>% 
-  filter(Mass_sample != 0 & Mass_blk != 0) # remove the empty samples
-
-write_csv(cal_6P_filtered_bis, "data/tidydata/data_6P_cal_bis.csv")
-
-pos_control_bis <- cal_6P_filtered_bis %>% 
-  filter(Sample == "C+", Time == 1800) %>% # select just the positive control at 1800min (30h)
-  arrange(desc(HE)) # arrange the HE in order to know the highest value of C+ so that we can 
-# use this value to filter the sample which are above it
-# the max extent of hydrolysis of C+ is 91.9%
-
-high_HE_bis <- cal_6P_filtered_bis %>% 
-  filter(Time == 1800, HE >= 77, Sample != "C+") # select the HE >= 77 (positive control) at 1800min (30h)
-
-write_csv(high_HE_bis, "results/high_HE_bis.csv") # save the data of high HE samples
-
-sample_67 <- cal_6P %>% 
-  filter(Sample == 67, Time == 1800)
-
-sample_02 <- cal_6P %>% 
-  filter(Sample == 02, Time == 1800)
-# check on different samples 
-
-neg_control_bis <- cal_6P_filtered_bis %>% 
-  filter(Sample == "C-", Time == 1800) %>% # select just the positive control at 1800min (30h)
-  arrange(HE)
-
-low_HE_bis <- cal_6P_filtered_bis %>% 
-  filter(Time == 1800, HE <= 49.4) # select the HE <= 49.4 (negative control) at 1800min, no one is below it
-# BUT sample 92 is 49.8, very close to the neg control
-
-sample_92_bis <- cal_6P_filtered_bis %>% 
-  filter(Sample == 92, Time == 1800) # check on the sample 92
-
 
 ######################################################################################################
 
