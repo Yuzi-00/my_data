@@ -13,9 +13,13 @@ mean_HE_6P <- cal_6P %>%
 ggplot(data = mean_HE_6P, # plotting by Time and the mean values of HE
        aes(x = Time, 
            y = mean_HE,
-           group = Sample)) + 
+           group = Sample,
+           color = Sample)) + # too many legends, how to change it ???
   geom_line() +
   geom_point() +
+  theme(legend.position = "none") +
+  # ??? scale_color_continuous("Price") # need to find the right expression
+  # ??? scale_color_manual(values = ) # how to change the color just for one line ????
   facet_wrap(~Sample) # problem: too many samples
 
 control_6P <- cal_6P %>% 
@@ -23,11 +27,12 @@ control_6P <- cal_6P %>%
   group_by(Plate)
 # choose the control group and save them to a new dataset
 
-control_6P <- ggplot(data = control_6P, # plotting for the control samples
+control_6P <- ggplot(data = control_6P, # plotting for the control samples separately
        aes(x = Time, 
            y = HE,
            group = Plate,
            color = Sample)) + 
+  geom_errorbar(aes(ymin=len-se, ymax=len+se), width=.1) +
   geom_line() +
   geom_point() + # problem: if we don't split it into two graphs, the lines are not correctly conneted
   facet_wrap(~Sample)
@@ -46,7 +51,24 @@ var_control_6P <- cal_6P %>%
 
 write_csv(var_control_6P, "analysis/var_control_6P.csv")
 
+var_control_6P <- ggplot(data = var_control_6P, # plotting for the control samples using mean and sd
+                     aes(x = Time, 
+                         y = mean_HE,
+                         color = Sample)) + 
+  geom_errorbar(aes(ymin=mean_HE - sd_HE, ymax=mean_HE + sd_HE), width=.1) + # adding the sd
+  # ??? question here
+  geom_line() +
+  geom_point() 
+
+ggsave("figures/var_control_6P.png", 
+       plot = var_control_6P, 
+       width = 15, 
+       height = 8, 
+       units = "cm") # save the plot
+
+
 #####################################################################################################
+
 
 # ploting using the data_6P_cal_bis dataset (if we just retain one decimal after the decimal mark)
 
