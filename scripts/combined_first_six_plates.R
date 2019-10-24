@@ -57,16 +57,17 @@ joined_data_design_first_six_plates <- full_join(data_first_six_plates, design_f
 
 write_csv(joined_data_design_first_six_plates, "data/tidydata/joined_data_design_first_six_plates.csv")
 
-mass_first_six_plates <- read_csv("data/tidydata/mass_first_six_plates.csv")
+mass_6P <- read_csv("data/tidydata/mass_6P.csv") # read in the mass dataset
 
-mass <- select(mass_first_six_plates, mass)
+mass_6P_renamed <- rename(mass_6P, Mass = mass) # rename the col to be consistent with another dataset
+  
+mass_6P_selected <- select(mass_6P_renamed, Mass) # select just the Mass col to be merged in the next step
 
-total_data_first_six_plates <-  bind_cols(joined_data_design_first_six_plates, mass) %>% 
-  select(Plate, Row, ColPair, Col, Sample, WellGroup, WellGroupType, mass, Time, OD) %>% 
-  rename(Mass = mass)
-# rename all the cols to be the same pattern as the design
+total_data_6P <-  bind_cols(joined_data_design_first_six_plates, mass_6P_selected) %>% 
+  select(Plate, Row, ColPair, Col, Sample, WellGroup, WellGroupType, Mass, Time, OD)
+# ordering the cols
 
-add_blk <-  total_data_first_six_plates %>% 
+add_blk <-  total_data_6P %>% 
   mutate(blank = Col %% 2 == 0) # %% is to check if there is something left over
 # for ex, 5 %% 2 should give us 1 
 # add a new col to distinguish the sample and the blank 
@@ -74,23 +75,23 @@ add_blk <-  total_data_first_six_plates %>%
 
 Sample <- add_blk %>% 
   filter(blank == FALSE) %>% # just keep the sample cols
-  rename(OD_sample = OD) %>% # rename the cols 
+  rename(OD_sample = OD, Mass_sample = Mass) %>% # rename the cols 
   select(-blank) # remove that blank col
 
 
 Blank <- add_blk %>% 
   filter(blank == TRUE) %>% # just keep the blank cols
-  rename(OD_blk = OD) %>% # rename the cols
-  select(OD_blk) # remove that blank col
+  rename(OD_blk = OD, Mass_blk = Mass) %>% # rename the cols
+  select(Mass_blk, OD_blk) # remove that blank col
 
-total_data_6P <- bind_cols(Sample, Blank)
+total_data_6P_transformed <- bind_cols(Sample, Blank)
 # bind the Sample and the Blank together by cols
 
 slope <- read_xlsx("C:/Users/WAN333/Documents/Thesis/Experiments/raw_data/slope.xlsx"，
                    range = "A2:C56")
 # read in the data from the standard curve (maltose), and save it to a new variable slope
 
-total_data_6P_slope <- inner_join(total_data_6P, slope)
+total_data_6P_slope <- inner_join(total_data_6P_transformed, slope)
 # join the slope with the previous total data using inner_join
 
 write_csv(total_data_6P_slope, "data/tidydata/total_data_6P_slope.csv")
@@ -106,7 +107,17 @@ design_renamed <- design_name %>%
 design_filted <- design_renamed %>% 
   filter(ID != "NA") # remove the NA within the col ID
 
-with_id <- left_join(total_data_6P_slope, design_filted) # join the previous dataset with id
+data_6P_id <- left_join(total_data_6P_slope, design_filted) # join the previous dataset with id
+
+data_6P_final <- select(data_6P_id, Plate, Row, ColPair, Col, Sample, ID, WellGroup, WellGroupType, 
+                        Mass_sample, Time, OD_sample, Mass_blk, OD_blk, Slope)
+# ordering the cols
+
+write_csv(data_6P_final, "data/tidydata/data_6P_hydro.csv")
+
+#####################################################################################################
+
+# To be done later, probably in a different script
 
 AmyCon <- read_xlsx("C:/Users/WAN333/Documents/Thesis/Thesis infomation/MAGIC population/Data_MAGIC Population/AmyloseContentData_Flour.xlsx")
 # read in the dataset of the amylose content
@@ -119,5 +130,6 @@ Amy_selected <- AmyCon %>%
 with_amy <- left_join(with_id, Amy_selected) # join the amylose content into the previous dataset
 
 write_csv(with_amy, "data/tidydata/total_6P_with_amy.csv")
+
 
 
