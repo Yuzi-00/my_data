@@ -26,28 +26,44 @@ pos_control <- cal_6P_filted %>%
                   # use this value to filter the sample which are above it
                 # the max extent of hydrolysis of C+ is 91.9%
 
+pos_control_NA_removed <- pos_control %>% 
+  filter(OD_sample != "NA") # removing the NA (the row at 1800min)
+
+pos_control_aver <- pos_control_NA_removed %>% 
+  summarise(mean_pos_control = mean(HE)) # calculating the mean value of the pos control at 1800min, and the value obtained is 87.7%
+
 high_HE <- cal_6P %>% 
-  filter(Time == 1800, HE >= 80, Sample != "C+") # select the HE >= 91.9 (positive control) at 1800min (30h)
-# the samples have a hydrolysis extent above the positive control are: 208, 62, 212, 177
+  filter(Time == 1800, Sample != "C+") %>%  # selecting the 1800min (30h) and removing the pos control samples 
+  group_by(Sample) %>% # group by samples 
+  summarise(mean_HE = mean(HE)) %>% # calculating the mean value of the HE for each sample at 1800min
+  filter(mean_HE >= 87.7) # retaining just the samples of which the HE are above 87.7% (the average of pos control)
+# here, we can see just 2 samples are above the pos control: 67 and 8
+
+sample_67 <- cal_6P %>% 
+  filter(Sample == 67, Time == 1800) # take a look at the sample 67
+# until the plate 6, the sample 67 hadn't been repeated, so keep an eye on the other two replicats (in plate 7 and 9)
+
+sample_08 <- cal_6P %>% 
+  filter(Sample == 8, Time == 1800) # take a look at the sample 08
+# until the plate 6, the sample 08 hadn't been repeated, so keep an eye on the other two replicats (in plate 9 and 14)
 
 write_csv(high_HE, "results/high_HE_samples.csv") # save the data of high HE samples
-  
-sample_67 <- cal_6P %>% 
-  filter(Sample == 67, Time == 1800)
-
-sample_02 <- cal_6P %>% 
-  filter(Sample == 02, Time == 1800)
-# check on different samples
 
 neg_control <- cal_6P_filted %>% 
-  filter(Sample == "C-", Time == 1800) %>% # select just the positive control at 1800min (30h)
+  filter(Sample == "C-", Time == 1800) %>% # select just the negative control at 1800min (30h)
   arrange(HE)
 
-low_HE <- cal_6P_filted %>% 
-  filter(Time == 1800, HE <= 53.8) # select the HE <= 53.8 (negative control) at 1800min
+neg_control_NA_removed <- neg_control %>% 
+  filter(OD_sample != "NA") # removing the NA (the row at 1800min)
 
-sample_92 <- cal_6P_filted %>% 
-  filter(Sample == 92, Time == 1800) # check on sample 92
+neg_control_aver <- neg_control_NA_removed %>% 
+  summarise(mean_neg_control = mean(HE)) # calculating the mean value of the neg control at 1800min, and the value obtained is 56.2%
+
+low_HE <- cal_6P %>% 
+  filter(Time == 1800, Sample != "C-") %>%  # selecting the 1800min (30h) and removing the neg control samples 
+  group_by(Sample) %>% # group by samples 
+  summarise(mean_HE = mean(HE)) %>% # calculating the mean value of the HE for each sample at 1800min
+  filter(mean_HE <= 56.2) # on one is below the neg control(HAMY)
 
 
 ######################################################################################################
@@ -83,32 +99,44 @@ pos_control_2nd <- cal_6P_2nd_filted %>%
 # use this value to filter the sample which are above it
 # the min extent of hydrolysis of C+ is 82.1%
 
+pos_control_2nd_NA_removed <- pos_control_2nd %>% 
+  filter(OD_sample != "NA") # removing the NA (the row at 1800min)
+
+pos_control_2nd_aver <- pos_control_2nd_NA_removed %>% 
+  summarise(mean_pos_control = mean(HE)) # calculating the mean value of the pos control at 1800min, and the value obtained is 86.4%
+
 high_HE_2nd <- cal_6P_2nd_filted %>% 
-  filter(Time == 1800, HE >= 82.1, Sample != "C+") # select the HE >= 81.6 (positive control) at 1800min (30h)
-# the samples have a hydrolysis extent above the positive control are: 212, 15, 134, 2, 67, 8
+  filter(Time == 1800, Sample != "C+") %>%  # selecting the 1800min (30h) and removing the pos control samples 
+  group_by(Sample) %>% # group by samples 
+  summarise(mean_HE = mean(HE)) %>% # calculating the mean value of the HE for each sample at 1800min
+  filter(mean_HE >= 86.4) # retaining just the samples of which the HE are above 86.4% (the average of pos control)
+# here, we can see just one sample are above the pos control: 67
 
 write_csv(high_HE_2nd, "results/high_HE_samples_2nd.csv") # save the data of high HE samples
 
 sample_67 <- cal_6P %>% 
-  filter(Sample == 67, Time == 1800)
-
-sample_02 <- cal_6P %>% 
-  filter(Sample == 02, Time == 1800)
-# check on different samples
+  filter(Sample == 67, Time == 1800) # take a look at the sample 67
+# until the plate 6, the sample 67 hadn't been repeated, so keep an eye on the other two replicats (in plate 7 and 9)
 
 neg_control_2nd <- cal_6P_2nd_filted %>% 
   filter(Sample == "C-", Time == 1800) %>% # select just the positive control at 1800min (30h)
   arrange(HE)
 
-low_HE_2nd <- cal_6P_2nd_filted %>% 
-  filter(Time == 1800, HE <= 57.9, Sample != "C-") # select the HE <= 57.9 (negative control) at 1800min
-# only sample 92 is below 57.9%
+neg_control_2nd_NA_removed <- neg_control_2nd %>% 
+  filter(OD_sample != "NA") # removing the NA (the row at 1800min)
 
-sample_92 <- cal_6P_filted %>% 
-  filter(Sample == 92, Time == 1800) # check on sample 92
+neg_control_2nd_aver <- neg_control_2nd_NA_removed %>% 
+  summarise(mean_neg_control = mean(HE)) # calculating the mean value of the neg control at 1800min, and the value obtained is 55.4%
+
+low_HE_2nd <- cal_6P_2nd_filted %>% 
+  filter(Time == 1800, Sample != "C-") %>%  # selecting the 1800min (30h) and removing the neg control samples 
+  group_by(Sample) %>% # group by samples 
+  summarise(mean_HE = mean(HE)) %>% # calculating the mean value of the HE for each sample at 1800min
+  filter(mean_HE <= 55.4) # on one is below the neg control(HAMY)
 
 
 #####################################################################################################
+
 
 # PS: calculating the variation of blk to see if we can use the average of it while doing the calculation
 
