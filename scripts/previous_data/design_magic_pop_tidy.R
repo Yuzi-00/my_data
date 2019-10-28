@@ -15,3 +15,14 @@ duplicated(design_magic) # looking for the repeated item in this dataset
 rep_item <- design_magic[duplicated(design_magic),] # showing the repeated item
 
 design_remove_rep <- unique(design_magic) # removing the repeated items
+
+design_tidy <- design_remove_rep %>% 
+  filter(id != "NA")
+# 223 rows in total because 1 : there are no 81 and no 160
+                          # 2 : 82 and 82* have different cav numbers
+
+design_tidy_renamed <- design_tidy %>%
+  rename(ID = "id", Sample = "Sample Name")
+
+write_csv(design_tidy_renamed, "data/tidydata/previous_data/design_magic_pop.csv")  
+
