@@ -227,7 +227,7 @@ data_6P_3nd <- read_csv("data/tidydata/data_6P_without_cal.csv")
 mean_slope_6P <- data_6P_3nd %>%  
   filter(Time == 360 | Time == 1440) %>% 
   group_by(Plate) %>% # group by plate
-  summarise(Mean_slope = mean(Slope)) # calculate the average of slope by plate
+  summarise(Mean_slope = mean(Slope, na.rm = TRUE)) # calculate the average of slope by plate
   
 data_with_mean_slope <- left_join(data_6P_3nd, mean_slope_6P) 
 # merge the average of slope by plate into the previous dataset
@@ -245,7 +245,7 @@ df <- data_filted %>%
 
 df <- df %>% 
   group_by(Plate) %>% # group by plate
-  mutate(mean_blk = mean(C_blk_nor)) # calculate the mean of the blank for each plate
+  mutate(mean_blk = mean(C_blk_nor, na.rm = TRUE)) # calculate the mean of the blank for each plate
 
 cal_6P_3nd <- df %>%
   mutate(C = C_spl_nor - mean_blk, 
