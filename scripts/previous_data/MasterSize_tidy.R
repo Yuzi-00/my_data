@@ -14,13 +14,12 @@ master_size <- df %>%
   rename(Sample = "Sample Name", d1 = "d (0.1)", d5 = "d (0.5)", d9 = "d (0.9)") %>% 
 # change the column name to be consistant with the other dataset
   group_by(Sample) %>% # group by sample
-  summarise(D1 = mean(d1), D5 = mean(d5), D9 = mean(d9)) # calculate the average diameters
+  summarise(D1 = mean(d1, na.rm = TRUE), D5 = mean(d5, na.rm = TRUE), D9 = mean(d9, na.rm = TRUE)) # calculate the average diameters
 # 224 samples in total according to the tibble that has just been created, which is consistant with what we have
 
-HE_amy_6P <- read_csv("data/tidydata/HE_amy_6P.csv")
-# read in the tidy dataset with hydrolysis extent and the amylose content
+write_csv(master_size, "data/tidydata/master_size.csv")
 
-HE_amy_size_6P <- left_join(HE_amy_6P, master_size) 
-# combine these two dataset together
 
-write_csv(HE_amy_size_6P, "data/tidydata/HE_amy_size_6P.csv")
+
+
+
