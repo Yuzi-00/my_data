@@ -43,10 +43,22 @@ parameters <- data_6P %>%
 
 class(parameters) # we can see that it's a data frame (a tibble)
 
+# add the sample name to the parameter list 
+
+sample_name <- data_6P %>% 
+  filter(!is.na(HE)) %>% # remove the missing value
+  filter(!(Plate == 1 & Sample == "208" & Time == 20)) %>% 
+  select(Sample) %>% 
+  unique() %>% # remove the duplicated sample names
+  arrange(Sample) # to get to the order that R had split in the last step
+
+# combine the fitted parameters with their sample names (by order)
+
+fitted_parameters <- bind_cols(sample_name, parameters)
+
 # save the fitted parameters into the analysis folder 
 
-write_csv(parameters, "analysis/fitted_parameters.csv")
-
+write_csv(fitted_parameters, "analysis/fitted_parameters.csv")
 
 ################################ goodness of the model #############################################
 
