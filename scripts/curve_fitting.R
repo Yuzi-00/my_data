@@ -37,7 +37,7 @@ parameters <- data_6P %>%
   map_df(find_paramters) 
 # the map function transform its input by applying the function find_parameters 
 # and save the outputs all together into a list
-# while the map_df function will do the save but save the outputs all together into a data frame
+# while the map_df function will do the same but save the outputs all together into a data frame
 
 # if we want to check the type of the data 
 
@@ -47,10 +47,10 @@ class(parameters) # we can see that it's a data frame (a tibble)
 
 sample_name <- data_6P %>% 
   filter(!is.na(HE)) %>% # remove the missing value
-  filter(!(Plate == 1 & Sample == "208" & Time == 20)) %>% 
-  select(Sample) %>% 
+  filter(!(Plate == 1 & Sample == "208" & Time == 20)) %>% # remove this sample with the same reason as before
+  select(Sample) %>% # select just the sample column
   unique() %>% # remove the duplicated sample names
-  arrange(Sample) # to get to the order that R had split in the last step
+  arrange(Sample) # get the same order as the output of the split(.$Sample) step
 
 # combine the fitted parameters with their sample names (by order)
 
@@ -88,6 +88,10 @@ goodness_model <- data_6P %>%
 # save the output under the analysis file
 
 write_csv(goodness_model, "analysis/goodness_fitting.csv")
+
+# check the residuals of the model
+
+plot(residuals(model))
 
 
 ######################################## plot ######################################################
@@ -130,5 +134,5 @@ sample_92 %>%
  
 ## check the residuals
  
- plot(residuals(model)) 
+ plot(residuals(model_92)) # it seems that there is a pattern there ?
  
