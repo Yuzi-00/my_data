@@ -36,6 +36,39 @@ HE_amy_size_para_6P <- left_join(HE_amy_size_6P, parameters)
 
 write_csv(HE_amy_size_para_6P, "results/HE_amy_size_para_6P.csv")
 
+################################################### add amylose content for C+ C- ############################################
+
+# select the C+ first
+
+pos_control <- HE_amy_size_para_6P %>% 
+  filter(Sample == "C+") %>% 
+  select()
+  
+replace()  
+
+
+is.na(Amylose_content) = 100
+
+## to be finished..........
+
+
+################################################## add RVA data ###################################################
+
+
+# import the RVA dataset
+
+RVA_data <- read_csv("data/tidydata/previous_data/RVA_tidy.csv")
+
+# merge the RVA data into this dataset
+
+joined_6P <- left_join(HE_amy_size_para_6P, RVA_data)
+
+# write out the new data frame
+
+write_csv(joined_6P, "data/tidydata/joined_6P.csv")
+
+###############################################################################################################
+
 
 # to be continued after tidying the other dataset separately first
 
