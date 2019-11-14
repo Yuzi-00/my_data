@@ -67,8 +67,16 @@ joined_6P <- left_join(HE_amy_size_para_6P, RVA_data)
 
 write_csv(joined_6P, "data/tidydata/joined_6P.csv")
 
-###############################################################################################################
+################################################## add CLD data ###################################################
 
+# import the CLD dataset
+
+CLD_data <- read_csv("data/tidydata/previous_data/CLD_tidy.csv") %>% 
+  rename(ID = id) ## change the column name to be consistent with other datasets
+
+# combien the CLD data with the previous joined dataset
+
+joined_6P_update <- left_join(joined_6P, CLD_data)
 
 # to be continued after tidying the other dataset separately first
 
