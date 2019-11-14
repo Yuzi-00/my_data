@@ -1,0 +1,210 @@
+---
+title: Modelling the hydrolysis of wheat starch
+subtitle: 
+author:  Yuzi Wang
+affiliation: CSIRO Agriculture & food
+photo: resources/img/profile_photo.jpg
+
+short_title: Optional short title
+
+output: DSreport::project_summary
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  results = 'asis',
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = 'center'
+)
+
+#Load libraries
+library(tidyverse)
+library(gapminder)
+library(kableExtra)
+```
+
+
+# Introduction
+
+I'm a phD student in the cereal quality group of Ag & food. Without any programming experience before, the data school is sort of a whole new world for me, and it turned out to be very intereting and I'm keen to learn more.
+
+# My Project
+
+The project is about modelling the degradation of wheat starch, the end goal is to built a model that predict the degradability of wheat starch from some structural properties.   
+
+## Preliminary results
+
+The current dataset came from the hydrolysis of more than 200 wheat starch and also some other structural properties as well. 
+
+**Tables**
+```{r mytable, out.width='100%', echo = F}
+
+mydata <- read_csv("data/tidydata/joined_6P.csv") %>% 
+  select(Sample, ID, Time, Hydro_extent, Amylose_content, D1, D5, D9, mean_Peak, mean_Trough, mean_Final, mean_PastingTemp)
+
+knitr::kable(head(mydata, n = 5), format = "html", caption = "Current dataset") %>% 
+  kable_styling("striped")
+```
+
+
+
+# My Digital Toolbox
+
+* before : Excel, SPSS, Origin
+* now : R 
+
+# My time went ...
+
+- tidying the data (the most time-consuming part)
+- plotting
+- curve fitting
+- collecting all the estimated parameters from the model
+
+<style> 
+.column-left{float: left; width: 50%; text-align: left;}
+.column-right{float: right;width: 50%;text-align: right}
+</style>
+
+<div class="column-left">
+
+
+```{r standard-plot, out.width='85%', fig.align='center', fig.height= 4, fig.width=4, fig.dpi = 300, fig.cap="Hydroysis extent of wheat starch overtime"}
+
+# import the dataset and add a new colume
+
+
+# this new column will help us do the plot
+
+hydro <- read_csv("data/tidydata/data_6P_cal_3nd.csv")%>% 
+  mutate(status = case_when( ## creat a new column to classify three different conditions
+    Sample == "C+" ~ "pos_control", ## if the sample name is C+, give it pos_control
+    Sample == "C-" ~ "neg_control", ## if the sample name is C-, give it neg_control
+    TRUE ~ "other" ## if it's not the cases above, give it other
+  ))
+
+# plotting the hydrolysis extent overtime
+
+ggplot(data = hydro, aes(x = Time, 
+                         y = HE,
+                         group = Sample,
+                         color = status)) +
+  geom_point(size = 1.6, alpha = 0.6) + ## add the transparency
+  scale_y_continuous(limits = c(0,100), expand = c(0, 0)) + ## set the range of the y axis with no more expand
+  scale_x_continuous(limits = c(0, 2000), expand = c(0, 0)) +
+  ylab("Hydrolysis extent (%)") + ## change the label for the y axis
+  xlab("Time (min)") + ## change the name of the x axis
+  theme(legend.title = element_blank(),
+        panel.grid = element_blank(),
+        axis.line = element_line(colour = "black", size = 0.5),
+        panel.background = element_rect(fill = "white"),
+        axis.ticks=element_line(colour="black", size=.5)) +
+  labs(x = "Time (min)", y = "Hydrolysis extent (%)") +
+  theme(axis.text.x = element_text(color="black", size=10), 
+        axis.text.y = element_text(color="black", size=10)) +
+  scale_color_manual(labels = c("Negtive control", "Sample", "Positive control"), values = c("#8da0cb", "#66c2a5", "#fc8d62")) +
+  theme(legend.key = element_blank(),
+        legend.position = "none") +
+  theme(plot.margin = unit(c(5.5,12,5.5,5.5), "pt")) ## set the margin
+```
+
+</div>
+
+<div class="column-right"> 
+
+```{r curvefitting, out.width='85%', fig.align='center', fig.height= 4, fig.width = 4, fig.dpi = 300, fig.cap="An example of the fitted curves"}
+
+
+# filter the data frame to have just the sample 92
+
+## sample 77 
+
+sample_77 <- hydro %>% 
+  filter(Sample == "77") %>% 
+  filter(!is.na(HE)) ### remove the missing value
+
+model_77 <- nls(formula = HE ~ Xinf*(1-exp(-k*Time**(1-h))), 
+             data = sample_77,
+             start = list(Xinf = 100,
+                          k = 0.001,
+                          h = 0.001)) ### the estimated Xinf is 72.8686, h is 0.0977, k is 0.0044
+
+## positive control
+
+pos_control <- hydro %>% 
+  filter(Sample == "C+") %>% 
+  filter(!is.na(HE))
+
+model_pos <- nls(formula = HE ~ Xinf*(1-exp(-k*Time**(1-h))), 
+             data = pos_control,
+             start = list(Xinf = 100,
+                          k = 0.001,
+                          h = 0.001)) ### the estimated Xinf is 84.8588, h is -0.2282, k is 0.0016
+
+## negative control
+
+neg_control <- hydro %>% 
+  filter(Sample == "C-") %>% 
+  filter(!is.na(HE))
+
+model_neg <- nls(formula = HE ~ Xinf*(1-exp(-k*Time**(1-h))), 
+             data = neg_control,
+             start = list(Xinf = 100,
+                          k = 0.001,
+                          h = 0.001)) ### the estimated Xinf is 55.3105, h is 0.1469, k is 0.0088
+
+# plotting
+ 
+ggplot() +
+  
+  ## add sample 77
+  
+  geom_point(data = sample_77, aes(x = Time, y = HE), alpha = 0.6, color = "#66c2a5") + 
+
+   stat_function(data = sample_77, fun = function(Time){72.8686*(1-exp(-0.0044*Time**(1-0.0977)))}, col = "#66c2a5") +
+  
+  ## add positive control
+
+  geom_point(data = pos_control, aes(x = Time, y = HE), alpha = 0.6, color = "#fc8d62") + 
+
+   stat_function(data = pos_control, fun = function(Time){84.8588*(1-exp(-0.0016*Time**(1+0.2282)))}, col = "#fc8d62") +
+  
+  ## add negative control
+  
+  geom_point(data = neg_control, aes(x = Time, y = HE), alpha = 0.6, color = "#8da0cb") + 
+   stat_function(data = neg_control, fun = function(Time){55.3105*(1-exp(-0.0088*Time**(1-0.1469)))}, col = "#8da0cb") +
+  
+   scale_y_continuous(limits = c(0, 100), expand = c(0, 0)) +
+    scale_x_continuous(limits = c(0, 2000), expand = c(0, 0)) +
+  ylab("Hydrolysis extent (%)") + ### change the label for the y axis
+  xlab("Time (min)") + ### change the name of the x axis
+  theme(legend.title = element_blank(),
+        panel.grid = element_blank(),
+        axis.line = element_line(colour = "black", size = 0.5),
+        panel.background = element_rect(fill = "white"),
+        axis.ticks=element_line(colour="black", size=.5)) +
+  labs(x = "Time (min)", y = "Hydrolysis extent (%)") +
+  theme(axis.text.x = element_text(color="black", size=10), 
+        axis.text.y = element_text(color="black", size=10)) +
+  theme(legend.key = element_blank(),
+        legend.position = "bottom") +
+  theme(plot.margin = unit(c(5.5,12,5.5,5.5), "pt"))
+
+```
+
+</div>
+
+
+
+
+
+
+# Next steps
+
+Establishing a predictive model using the Partial least squares (PLS) regression.
+
+
+# My Data School Experience
+
+It's an awesome learning experience for me. What I really appreciate is that they explained the codes in detail which lead us to a real understanding of what we were computing at the moment. I've already applied what I've learnt in data school to my daily work, and it's always exciting to discover more codes that help us solve various problems. 
+
