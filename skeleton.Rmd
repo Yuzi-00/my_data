@@ -150,13 +150,33 @@ hydro <- read_csv("data/tidydata/data_6P_cal_3nd.csv")%>%
     TRUE ~ "other" ## if it's not the cases above, give it other
   )) 
 
+# creat a new column to distingrish each sample 
+
+hydro <- hydro %>% 
+  mutate(Well = paste(Plate, Row, Col, sep = "_")) 
+
+# remove the outlier at 20min in plate 1
+
+## find the outlier first
+
+find_max <- hydro %>% 
+  filter(Time == 20) %>% 
+  arrange(desc(HE))
+
+## remove it
+
+hydro_no_outlier <- hydro %>% 
+  filter(!(Time == 20 & Well == "1_C_11"))
+
 # plotting the hydrolysis extent overtime
 
-ggplot(data = hydro, aes(x = Time, 
+ggplot(data = hydro_no_outlier, aes(x = Time, 
                          y = HE,
-                         group = Sample,
+                         group = Well,
                          color = status)) +
-  geom_point(size = 1.6, alpha = 0.6) + ## add the transparency
+  geom_point(size = 1, shape = 1) + ## use hollow circles by "shape = 1"
+  geom_line(size = 0.05) + # make the line thinner
+  scale_color_brewer(palette = "Set1") +
   scale_y_continuous(limits = c(0,100), expand = c(0, 0)) + ## set the range of the y axis with no more expand
   scale_x_continuous(limits = c(0, 2000), expand = c(0, 0)) +
   ylab("Hydrolysis extent (%)") + ## change the label for the y axis
@@ -169,10 +189,11 @@ ggplot(data = hydro, aes(x = Time,
   labs(x = "Time (min)", y = "Hydrolysis extent (%)") +
   theme(axis.text.x = element_text(color="black", size=10), 
         axis.text.y = element_text(color="black", size=10)) +
-  scale_color_manual(labels = c("Negtive control", "Sample", "Positive control"), values = c("#66c2a5", "#fc8d62", "#8da0cb")) +
+   
   theme(legend.key = element_blank(),
         legend.position = "bottom") +
-  theme(plot.margin = unit(c(5.5,12,5.5,5.5), "pt")) ## set the margin
+  theme(plot.margin = unit(c(5.5,12,5.5,5.5), "pt")) + ## set the margin
+  facet_wrap(~ Plate)
 ```
 
 </div>
@@ -226,14 +247,18 @@ three_samples <- hydro %>%
   filter(Sample == "C+" | Sample == "C-" | Sample == "77") %>% 
   filter(!is.na(HE))
 
+# define the sample col as a factor
+
+three_samples$status <- factor(three_samples$status, levels = c("", "Sample", "Negative control"))
+
 # plotting
  
 ggplot(data = three_samples, aes(x = Time, y = HE, alpha = 0.6, color = Sample)) +
   
   ## add sample 77
   
-  geom_point() + 
-  scale_color_manual(labels = c("Negtive control", "Sample", "Positive control"), values = c("#66c2a5", "#8da0cb", "#fc8d62")) +
+  geom_point(size = 2, shape = 1) + 
+  scale_color_manual(labels = c("Positive control", "Sample","Negative control"), values = c("#fc8d62", "#66c2a5", "#8da0cb")) +
   scale_y_continuous(limits = c(0, 100), expand = c(0, 0)) +
     scale_x_continuous(limits = c(0, 2000), expand = c(0, 0)) +
   ylab("Hydrolysis extent (%)") + ### change the label for the y axis
@@ -249,16 +274,21 @@ ggplot(data = three_samples, aes(x = Time, y = HE, alpha = 0.6, color = Sample))
   theme(legend.key = element_blank(),
         legend.position = "bottom") +
   theme(plot.margin = unit(c(5.5,12,5.5,5.5), "pt")) +
+  
+ ## add negative control
+  
+   stat_function(data = neg_control, fun = function(Time){55.3105*(1-exp(-0.0088*Time**(1-0.1469)))}, col = "#66c2a5", size = 0.7) +
 
+  ## add sample
+  
    stat_function(data = sample_77, fun = function(Time){72.8686*(1-exp(-0.0044*Time**(1-0.0977)))}, col = "#fc8d62", size = 0.7) +
   
   ## add positive control
 
-   stat_function(data = pos_control, fun = function(Time){84.8588*(1-exp(-0.0016*Time**(1+0.2282)))}, col = "#8da0cb", size = 0.7) +
+   stat_function(data = pos_control, fun = function(Time){84.8588*(1-exp(-0.0016*Time**(1+0.2282)))}, col = "#8da0cb", size = 0.7) 
   
-  ## add negative control
-  
-   stat_function(data = neg_control, fun = function(Time){55.3105*(1-exp(-0.0088*Time**(1-0.1469)))}, col = "#66c2a5", size = 0.7) 
+ 
+ 
   
    
 
