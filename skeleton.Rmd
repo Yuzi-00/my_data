@@ -138,6 +138,7 @@ data_t0 %>%
 
 ```{r standard-plot, out.width='100%', fig.align='center', fig.height= 4, fig.width=4, fig.dpi = 300, fig.cap="Hydroysis extent of wheat starch overtime"}
 
+
 # import the dataset and add a new colume
 
 
@@ -145,9 +146,9 @@ data_t0 %>%
 
 hydro <- read_csv("data/tidydata/data_6P_cal_3nd.csv")%>% 
   mutate(status = case_when( ## creat a new column to classify three different conditions
-    Sample == "C+" ~ "pos_control", ## if the sample name is C+, give it pos_control
-    Sample == "C-" ~ "neg_control", ## if the sample name is C-, give it neg_control
-    TRUE ~ "other" ## if it's not the cases above, give it other
+    Sample == "C+" ~ "Positive control", ## if the sample name is C+, give it pos_control
+    Sample == "C-" ~ "Negative control", ## if the sample name is C-, give it neg_control
+    TRUE ~ "Sample" ## if it's not the cases above, give it other
   )) 
 
 # creat a new column to distingrish each sample 
@@ -171,29 +172,31 @@ hydro_no_outlier <- hydro %>%
 # plotting the hydrolysis extent overtime
 
 ggplot(data = hydro_no_outlier, aes(x = Time, 
-                         y = HE,
-                         group = Well,
-                         color = status)) +
+                                    y = HE,
+                                    group = Well,
+                                    color = status)) +
   geom_point(size = 1, shape = 1) + ## use hollow circles by "shape = 1"
   geom_line(size = 0.05) + # make the line thinner
-  scale_color_brewer(palette = "Set1") +
+  scale_color_manual(values = c("#e41a1c", "#4daf4a", "#377eb8")) +
   scale_y_continuous(limits = c(0,100), expand = c(0, 0)) + ## set the range of the y axis with no more expand
-  scale_x_continuous(limits = c(0, 2000), expand = c(0, 0)) +
+  scale_x_continuous(breaks = c(500, 1500),
+                     limits = c(0, 1900), expand = c(0, 0)) +
   ylab("Hydrolysis extent (%)") + ## change the label for the y axis
   xlab("Time (min)") + ## change the name of the x axis
-  theme(legend.title = element_blank(),
-        panel.grid = element_blank(),
-        axis.line = element_line(colour = "black", size = 0.5),
-        panel.background = element_rect(fill = "white"),
-        axis.ticks=element_line(colour="black", size=.5)) +
+theme(legend.title = element_blank(),
+      panel.grid = element_blank(),
+      axis.line = element_line(colour = "black", size = 0.5),
+      panel.background = element_blank(),
+      axis.ticks=element_line(colour="black", size=.5)) +
   labs(x = "Time (min)", y = "Hydrolysis extent (%)") +
   theme(axis.text.x = element_text(color="black", size=10), 
         axis.text.y = element_text(color="black", size=10)) +
-   
+  
   theme(legend.key = element_blank(),
         legend.position = "bottom") +
   theme(plot.margin = unit(c(5.5,12,5.5,5.5), "pt")) + ## set the margin
-  facet_wrap(~ Plate)
+  facet_wrap(~ Plate) +
+  theme(strip.background = element_blank())
 ```
 
 </div>
