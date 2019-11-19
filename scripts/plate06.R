@@ -47,6 +47,11 @@ filter(data_plate06,is.na(OD)) %>%
 # if you want all the data expect for the NA, just put a ! in front of the is.na()
   # other option to filter the NA is: filter(data_plate06, OD %in% NA)
   
+missing_values <- filter(data_plate06, 
+       is.na(OD))
+
+# the missing values in plate06 is due to the column 5 and column 9 at different time point, and so the column 6 and 10 also
+# become useless as they are the blanks for column 5 and 9
 
 
 
