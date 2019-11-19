@@ -40,8 +40,8 @@ The current dataset came from the hydrolysis of more than 200 wheat starch and a
 **Tables**
 ```{r mytable, out.width='100%', echo = F}
 
-mydata <- read_csv("data/tidydata/joined_6P.csv") %>% 
-  select(Sample, ID, Time, Hydro_extent, Amylose_content, D1, D5, D9, mean_Peak, mean_Trough, mean_Final, mean_PastingTemp)
+mydata <- read_csv("data/tidydata/joined_6P_update.csv") %>% 
+  select(Sample, ID, Time, Hydro_extent, Amylose_content, D1, D5, D9, mean_Peak, mean_Trough, mean_Final, mean_PastingTemp, low_dp, medium_dp, medium_high_dp, high_dp)
 
 knitr::kable(head(mydata, n = 5), format = "html", caption = "Current dataset") %>% 
   kable_styling("striped")
