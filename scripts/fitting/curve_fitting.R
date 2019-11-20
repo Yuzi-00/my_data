@@ -161,10 +161,10 @@ sample_92 %>%
  
  # add a new column that calculate the fitted hydrolysis extent using the Weibull function
  
- new_data %>%
+ final_data <- new_data %>%
    mutate(fitted_HE = Xinf*(1-exp(-k*Time**(1-h))))
 
  # write out this dataset
  
- write_csv(new_data, "analysis/fitted_HE.csv")
+ write_csv(final_data, "analysis/fitted_HE.csv")
  
