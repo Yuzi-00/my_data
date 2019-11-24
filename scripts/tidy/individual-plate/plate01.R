@@ -44,6 +44,9 @@ data_plate01 <- data_plate01 %>%
 
 write_csv(data_plate01, "data/tidydata/plate01.csv")
 
+# check the NAs
 
+filter(data_plate01,is.na(OD)) %>% 
+  nrow() # 18 NAs, which is right
 
 

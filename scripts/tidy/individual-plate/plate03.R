@@ -43,7 +43,13 @@ data_plate03 <- data_plate03 %>%
 # what's the "round" stands for ? 
 # why doesn't give me sth like 3.000 within the plate nbr col
 
+# replace all the row C, column 7 and 8 into NA
+
+data_plate03 <- data_plate03 %>% 
+  mutate(OD = na_if(OD, "0")) # if the value in column OD is 0, replace them by NA 
+
 write_csv(data_plate03, "data/tidydata/plate03.csv")
 
-
+filter(data_plate07,is.na(OD)) %>% 
+  nrow() # 18 NAs, which is right
 
