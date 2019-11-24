@@ -37,6 +37,11 @@ data_plate05 <- select(data_plate05, plate, raw, col, time, OD) %>%
   arrange(raw)
 # ordering the column names and arrange by the raw
 
+# replace all the row A, column 9 and 10 into NA
+
+data_plate05 <- data_plate05 %>% 
+  mutate(OD = na_if(OD, "0")) # if the value in column OD is 0, replace them by NA 
+
 write_csv(data_plate05, "data/tidydata/plate05.csv")
 
 
