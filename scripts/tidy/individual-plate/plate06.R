@@ -37,21 +37,25 @@ data_plate06 <- select(data_plate06, plate, raw, col, time, OD) %>%
   arrange(raw)
 # ordering the column names and arrange by the raw
 
+# replace all the row H, column 11 and 12 into NA
+
+# replace col 5&6 at 240min, col 9&10 at 1800min
+
+data_plate06 <- data_plate06 %>% 
+  mutate(OD = na_if(OD, "0")) # if the value in column OD is 0, replace them by NA 
+
 write_csv(data_plate06, "data/tidydata/plate06.csv")
 
 filter(data_plate06,is.na(OD)) %>% 
-  nrow()
+  nrow() # 50 NAs, which is right
+
 # can't compare(==) NA, for ex, if you enter in the console NA == NA, it will give you NA
 # so you can't actually compare a missing data
 # use the function is.na(), put the col name within the ()
 # if you want all the data expect for the NA, just put a ! in front of the is.na()
   # other option to filter the NA is: filter(data_plate06, OD %in% NA)
   
-missing_values <- filter(data_plate06, 
-       is.na(OD))
 
-# the missing values in plate06 is due to the column 5 and column 9 at different time point, and so the column 6 and 10 also
-# become useless as they are the blanks for column 5 and 9
 
 
 
