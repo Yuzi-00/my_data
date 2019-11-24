@@ -26,7 +26,6 @@ for (fltime in filetime) {
 # add two columns: plate number and time point from the 2nd spreadsheet on 
 # bind them by raws
 
-
 data_plate01 <- rename(data_plate01, raw = ...1) 
 # modify the default name for the first col & raw
 
@@ -37,6 +36,11 @@ data_plate01 <- gather(data_plate01, col, OD, -raw, -plate, -time)
 data_plate01 <- select(data_plate01, plate, raw, col, time, OD) %>% 
   arrange(raw)
 # ordering the column names and arrange by the raw
+
+# replace all the row G, column 9 and 10 into NA
+
+data_plate01 <- data_plate01 %>% 
+  mutate(OD = na_if(OD, "0")) # if the value in column OD is 0, replace them by NA 
 
 write_csv(data_plate01, "data/tidydata/plate01.csv")
 
