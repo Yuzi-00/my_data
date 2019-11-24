@@ -38,8 +38,15 @@ data_plate04 <- select(data_plate04, plate, raw, col, time, OD) %>%
   arrange(raw)
 # ordering the column names and arrange by the raw
 
+# replace all the row B and G, column 3 and 4 into NA
+
+data_plate04 <- data_plate04 %>% 
+  mutate(OD = na_if(OD, "0")) # if the value in column OD is 0, replace them by NA 
+
 write_csv(data_plate04, "data/tidydata/plate04.csv")
 
+filter(data_plate04,is.na(OD)) %>% 
+  nrow() # 36 NAs, which is right
 
 
 
