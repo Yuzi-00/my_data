@@ -43,6 +43,11 @@ data_plate11 <- gather(data_plate11, col, OD, -raw, -plate, -time)
 data_plate11 <- select(data_plate11, plate, raw, col, time, OD) %>% 
   arrange(raw)
 
+# replace all the row H, column 3 and 4 into NA
+
+data_plate11 <- data_plate11 %>% 
+  mutate(OD = na_if(OD, "0")) # if the value in column OD is 0, replace them by NA 
+
 # write out the final dataset
 
 write_csv(data_plate11, "data/tidydata/plate11.csv")
@@ -50,7 +55,7 @@ write_csv(data_plate11, "data/tidydata/plate11.csv")
 # check if there are any missing values
 
 filter(data_plate11,is.na(OD)) %>% 
-  nrow() # no missing values, good
+  nrow() # 18 NAs, which is correct
 
 
 
