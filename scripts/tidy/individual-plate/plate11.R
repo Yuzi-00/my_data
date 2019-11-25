@@ -17,7 +17,7 @@ data_plate11 <- read_excel(paste0(filename1,'0',filename2), range = "A15:M23")
 
 # add two columns: plate number and time point for the 1st spreadsheet
 
-data_plate11 <- mutate(data_plate11, plate = 7, time = 0)
+data_plate11 <- mutate(data_plate11, plate = 11, time = 0)
 
 # creat a loop to import all the spreadsheet
 
