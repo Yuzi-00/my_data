@@ -108,9 +108,23 @@ write_csv(joined_15P_with_mass, "data/tidydata/joined_15P_with_mass.csv")
 
 slope <- read_xlsx("C:/Users/WAN333/Documents/Thesis/Experiments/raw_data/slope_15P.xlsx")
 
+# gather the data in order to do the calculation
+
+slope_gathered <- slope %>% 
+  gather(Day, Slope, -Plate)
+
+# calculate the mean values of the slope by plate
+
+mean_slope <- slope_gathered %>% 
+  group_by(Plate) %>% 
+  mutate(mean_slope = mean(Slope)) %>% 
+  arrange(Plate) %>% 
+  select(Plate, mean_slope) %>% 
+  unique() # remove the duplicated rows
+
 # join the slope with the previous dataset
 
-joined_15P_with_mass_slope <- left_join(joined_15P_with_mass, slope)
+joined_15P_with_mass_slope <- left_join(joined_15P_with_mass, mean_slope)
 
 # save the joined dataset
 
