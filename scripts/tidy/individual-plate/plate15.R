@@ -37,8 +37,18 @@ data_plate15 <- select(data_plate15, plate, raw, col, time, OD) %>%
   arrange(raw)
 # ordering the column names and arrange by the raw
 
+# replace the column 7 and 8, row A, B, D
+# replace the row H from column 3 to 12
+
+data_plate15 <- data_plate15 %>% 
+  mutate(OD = na_if(OD, "0")) # if the value in column OD is 0, replace them by NA 
+
 write_csv(data_plate15, "data/tidydata/plate15.csv")
 
+# check the missing values
+
+filter(data_plate15,is.na(OD)) %>% 
+  nrow() # 144 NAs, which is correct
 
 
 
