@@ -104,9 +104,9 @@ write_csv(joined_15P_with_mass, "data/tidydata/joined_15P_with_mass.csv")
 
 ########################################### add the slope into the previous dataset ##############################################################
 
-# read in the slope data (already calculated the mean values by plate)
+# read in the slope data 
 
-slope <- read_csv("data/tidydata/slope_15P.csv")
+slope <- read_xlsx("C:/Users/WAN333/Documents/Thesis/Experiments/raw_data/slope_15P.xlsx")
 
 # join the slope with the previous dataset
 
@@ -116,25 +116,23 @@ joined_15P_with_mass_slope <- left_join(joined_15P_with_mass, slope)
 
 write_csv(joined_15P_with_mass_slope, "data/tidydata/joined_15P_with_mass_slope.csv")
 
-##################################################################
+#################################### add the cav number into the previous dataset ###############################################################
 
-design_name <- read_xlsx("C:/Users/WAN333/Documents/Thesis/Thesis infomation/MAGIC population/Data_MAGIC Population/Design name starch_flour.xlsx")
-# read in the data that contains the id and the sample name
+# read in the design for the magic population
 
-design_renamed <- design_name %>% 
-  rename(Sample = "Sample Name", ID = id) # rename the cols 
-# to be consistant with the tidy dataset
+design_name <- read_csv("data/tidydata/previous_data/design_magic_pop.csv")
 
-design_filted <- design_renamed %>% 
-  filter(ID != "NA") # remove the NA within the col ID
+# join the previous dataset with id
 
-data_6P_id <- left_join(total_data_6P_slope, design_filted) # join the previous dataset with id
+joined_15P_with_mass_slope_id <- left_join(joined_15P_with_mass_slope, design_name) 
 
-data_6P_final <- select(data_6P_id, Plate, Row, ColPair, Col, Sample, ID, WellGroup, WellGroupType, 
-                        Mass_sample, Time, OD_sample, Mass_blk, OD_blk, Slope)
+# reordering the column names
+
+joined_15P_with_mass_slope_id <- select(joined_15P_with_mass_slope_id, Plate, Row, ColPair, Column, Sample, ID, WellGroup, WellGroupType, 
+                        Mass_sample, Time, OD_sample, Mass_blk, OD_blk, Slope_Day1, Slope_Day2)
 # ordering the cols
 
-write_csv(data_6P_final, "data/tidydata/data_6P_without_cal.csv")
+write_csv(joined_15P_with_mass_slope_id, "data/tidydata/joined_15P_with_mass_slope_id.csv")
 
 #####################################################################################################
 
