@@ -44,6 +44,7 @@ data_plate07 <- select(data_plate07, plate, raw, col, time, OD) %>%
   arrange(raw)
 
 # replace the row G, column 9 and 10 by NA (did not distinguish the 82 with 82* at that moment)
+# replace the row D, column 11 and 12 by NA
 
 data_plate07 <- data_plate07 %>% 
   mutate(OD = na_if(OD, "0")) # if the value in column OD is 0, replace them by NA 
@@ -55,7 +56,7 @@ write_csv(data_plate07, "data/tidydata/plate07.csv")
 # check if there are any missing values
 
 filter(data_plate07,is.na(OD)) %>% 
-  nrow() # 18 NAs, which is right
+  nrow() # 36 NAs, which is right
 
 
 
