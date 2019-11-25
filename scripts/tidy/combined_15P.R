@@ -60,37 +60,49 @@ joined_15P <- full_join(data_15P, design) %>%
 
 write_csv(joined_15P, "data/tidydata/joined_15P.csv")
 
-################################################################################
+############################################ add the mass into the previous joined dataset ########################################################
 
-mass_6P <- read_csv("data/tidydata/mass_6P.csv") # read in the mass dataset
+# read in the mass dataset (tidy version)
 
-mass_6P_renamed <- rename(mass_6P, Mass = mass) # rename the col to be consistent with another dataset
+mass <- read_csv("data/tidydata/mass_15P.csv") 
 
-mass_6P_selected <- select(mass_6P_renamed, Mass) # select just the Mass col to be merged in the next step
+# select just the Mass column to be merged in the next step
 
-total_data_6P <-  bind_cols(joined_data_design_first_six_plates, mass_6P_selected) %>% 
-  select(Plate, Row, ColPair, Col, Sample, WellGroup, WellGroupType, Mass, Time, OD)
-# ordering the cols
+mass_selected <- select(mass, Mass)
 
-add_blk <-  total_data_6P %>% 
-  mutate(blank = Col %% 2 == 0) # %% is to check if there is something left over
+total <-  bind_cols(joined_15P, mass_selected) %>% 
+  select(Plate, Row, ColPair, Column, Sample, WellGroup, WellGroupType, Mass, Time, OD) # ordering the columns
+
+# add a column to distnguish the sample and the blank
+
+add_blk <-  total %>% 
+  mutate(blank = Column %% 2 == 0) # %% is to check if there is something left over
 # for ex, 5 %% 2 should give us 1 
 # add a new col to distinguish the sample and the blank 
 # so that we can use it to filter our dataset
 
+# extract the samples
+
 Sample <- add_blk %>% 
-  filter(blank == FALSE) %>% # just keep the sample cols
-  rename(OD_sample = OD, Mass_sample = Mass) %>% # rename the cols 
-  select(-blank) # remove that blank col
+  filter(blank == FALSE) %>% # just keep the sample columns
+  rename(OD_sample = OD, Mass_sample = Mass) %>% # rename the columns 
+  select(-blank) # remove that blank column
 
 
 Blank <- add_blk %>% 
-  filter(blank == TRUE) %>% # just keep the blank cols
-  rename(OD_blk = OD, Mass_blk = Mass) %>% # rename the cols
-  select(Mass_blk, OD_blk) # remove that blank col
+  filter(blank == TRUE) %>% # just keep the blank columns
+  rename(OD_blk = OD, Mass_blk = Mass) %>% # rename the columns
+  select(Mass_blk, OD_blk) # remove that blank column
 
-total_data_6P_transformed <- bind_cols(Sample, Blank)
-# bind the Sample and the Blank together by cols
+# bind the Sample and the Blank together by column
+
+joined_15P_with_mass <- bind_cols(Sample, Blank)
+
+# save the dataset
+
+write_csv(joined_15P_with_mass, "data/tidydata/joined_15P_with_mass.csv")
+
+####################################################################################################################################
 
 slope <- read_xlsx("C:/Users/WAN333/Documents/Thesis/Experiments/raw_data/slope.xlsx"，
                    range = "A2:C56")
