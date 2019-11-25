@@ -102,17 +102,21 @@ joined_15P_with_mass <- bind_cols(Sample, Blank)
 
 write_csv(joined_15P_with_mass, "data/tidydata/joined_15P_with_mass.csv")
 
-####################################################################################################################################
+########################################### add the slope into the previous dataset ##############################################################
 
-slope <- read_xlsx("C:/Users/WAN333/Documents/Thesis/Experiments/raw_data/slope.xlsx"，
-                   range = "A2:C56")
-# read in the data from the standard curve (maltose), and save it to a new variable slope
+# read in the slope data (already calculated the mean values by plate)
 
-total_data_6P_slope <- inner_join(total_data_6P_transformed, slope)
-# join the slope with the previous total data using inner_join
+slope <- read_csv("data/tidydata/slope_15P.csv")
 
-write_csv(total_data_6P_slope, "data/tidydata/total_data_6P_slope.csv")
-# save the final dataset
+# join the slope with the previous dataset
+
+joined_15P_with_mass_slope <- left_join(joined_15P_with_mass, slope)
+
+# save the joined dataset
+
+write_csv(joined_15P_with_mass_slope, "data/tidydata/joined_15P_with_mass_slope.csv")
+
+##################################################################
 
 design_name <- read_xlsx("C:/Users/WAN333/Documents/Thesis/Thesis infomation/MAGIC population/Data_MAGIC Population/Design name starch_flour.xlsx")
 # read in the data that contains the id and the sample name
