@@ -136,19 +136,6 @@ write_csv(joined_15P_with_mass_slope_id, "data/tidydata/joined_15P_with_mass_slo
 
 #####################################################################################################
 
-# To be done later, probably in a different script
-
-AmyCon <- read_xlsx("C:/Users/WAN333/Documents/Thesis/Thesis infomation/MAGIC population/Data_MAGIC Population/AmyloseContentData_Flour.xlsx")
-# read in the dataset of the amylose content
-
-Amy_selected <- AmyCon %>% 
-  select(ID, `amylose content estimate`) %>% # select just the id and the AMY cols
-  group_by(ID) %>% # group by ID
-  summarise(mean_amy = mean(`amylose content estimate`)) # clculate the mean value for each id
-
-with_amy <- left_join(with_id, Amy_selected) # join the amylose content into the previous dataset
-
-write_csv(with_amy, "data/tidydata/total_6P_with_amy.csv")
 
 
 
