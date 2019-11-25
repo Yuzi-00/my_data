@@ -50,6 +50,6 @@ data_plate03 <- data_plate03 %>%
 
 write_csv(data_plate03, "data/tidydata/plate03.csv")
 
-filter(data_plate07,is.na(OD)) %>% 
+filter(data_plate03,is.na(OD)) %>% 
   nrow() # 18 NAs, which is right
 
