@@ -1,0 +1,27 @@
+---
+title: "Hydrolysis 15 plates"
+author: "Yuzi"
+date: "25/11/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Notes - tidy the data
+
+The results of the following samples are marked as **NA** :
+
+- 5 empty sapmles : 178, 101, 146, 107 and 119
+- row H, column 3 to 12 in plate 15 : no samples
+- col 5&6 at 240min in plate 6 : technical issue (these sapmles were repeated in plate 15)
+- col 9&10 at 1800min in plate 6 : technical issue (these sapmles were repeated in plate 15)
+- the sample 49 in plate 6 : did not find this sample at that moment (have not been repeated in plate 15, might need to repeat it later)
+- the sample 82* in plate 5 and 7 (did not distinguish from the sample 82)
+
+```{r tidy_data}
+
+```
+
+
