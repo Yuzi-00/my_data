@@ -39,7 +39,7 @@ data_plate06 <- select(data_plate06, plate, raw, col, time, OD) %>%
 
 # replace all the row H, column 11 and 12 into NA
 
-# replace col 5&6 at 240min, col 9&10 at 1800min
+# replace col 5&6, col 9&10
 
 data_plate06 <- data_plate06 %>% 
   mutate(OD = na_if(OD, "0")) # if the value in column OD is 0, replace them by NA 
@@ -47,7 +47,7 @@ data_plate06 <- data_plate06 %>%
 write_csv(data_plate06, "data/tidydata/plate06.csv")
 
 filter(data_plate06,is.na(OD)) %>% 
-  nrow() # 50 NAs, which is right
+  nrow() # 306 NAs, which is right
 
 # can't compare(==) NA, for ex, if you enter in the console NA == NA, it will give you NA
 # so you can't actually compare a missing data
