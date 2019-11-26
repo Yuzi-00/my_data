@@ -4,6 +4,8 @@ install.packages("naniar")
 
 library(naniar)
 
+#################################################### scatter plot of the HE ######################################################################
+
 # read in the calculated dataset
 
 data_15P <- read_csv("data/tidydata/data_15P_cal.csv")
@@ -79,7 +81,7 @@ data_status <- data_15P_outlier_deleted %>%
     TRUE ~ "Sample"
   ))
 
-ggplot(data = data_status, 
+HE_15P <- ggplot(data = data_status, 
        aes(x = Time, 
            y = HE,
            group = Sample,
@@ -103,27 +105,17 @@ ggplot(data = data_status,
   theme(legend.key = element_blank(),
         legend.position = "bottom")
 
+# save the plot
 
-##########################
+ggsave("figures/scatter-plot_15P.png", 
+       plot = HE_15P, 
+       width = 10, 
+       height = 8, 
+       units = "cm") 
+# need to change the size of the figure later !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-df %>% 
-  filter(Time == 240, cov >= 10) # check the big variance samples at t = 360min
-# 15 samples
+################################################ individual plot ############################################################################
 
-df %>% 
-  filter(Time == 360, cov >= 10) # check the big variance samples at t = 360min
-# 18 samples
-
-df %>% 
-  filter(Time == 1440, cov >= 10) # check the big variance samples at t = 1440min
-# 4 samples : 122, 139, 220, 92
-
-
-df %>% 
-  filter(Time ==1800, cov >= 10) # check the big variance samples at t = 1800min
-# 5 samples : 134, 139, 83, 92, 96
-
-# Apparently sample 92 and 139 have a quite big variance both at 1440 and 1800min 
 
 
 sample_6P_3nd <- ggplot(data = df, # plotting by Time and the mean values of HE
@@ -138,11 +130,7 @@ sample_6P_3nd <- ggplot(data = df, # plotting by Time and the mean values of HE
 # ??? scale_color_manual(values = ) # how to change the color just for one line ???
 
 
-ggsave("figures/sample_6P_3nd.png", 
-       plot = sample_6P_3nd, 
-       width = 10, 
-       height = 8, 
-       units = "cm") # save the plot 
+ # save the plot 
 # need to change the thickness of the line !!!!!!!!!!!!!!!
 
 
