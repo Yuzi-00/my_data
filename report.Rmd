@@ -1,0 +1,70 @@
+---
+title: "Hydrolysis 15 plates"
+author: "Yuzi"
+date: "25/11/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  results = 'asis',
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = 'center'
+)
+library(tidyverse)
+```
+
+# Notes (tidy the data)
+
+The results of the following samples are marked as **NA** :
+
+- 5 empty sapmles : 178, 101, 146, 107 and 119
+- row H, column 3 to 12 in plate 15 : no samples
+- col 5, 6, 9, 10 in plate 6 : technical issue (these sapmles were repeated in plate 15)
+- the sample 49 in plate 6 : did not find this sample at that moment (have not been repeated in plate 15, might need to repeat it later)
+- the sample 82* in plate 5 and 7 (did not distinguish from the sample 82)
+
+# Scatter plot of the hydrolysis extent
+
+```{r scatter-plot}
+# import the dataset
+
+data_15P_outlier_deleted <- read_csv("data/tidydata/data_15P_outlier_deleted.csv")
+
+data_status <- data_15P_outlier_deleted %>% 
+  mutate(status = case_when( # number of conditions (left), discription of the results in that condition
+    Sample == "C+" ~ "Positive control", 
+    Sample == "C-" ~ "Negative control",
+    TRUE ~ "Sample"
+  ))
+
+ggplot(data = data_status, 
+       aes(x = Time, 
+           y = HE,
+           group = Sample,
+           color = status)) + # colored by the status (distinguish the control from the other samples)
+  geom_point(size = 2, shape = 1) + # add the transparency
+  scale_y_continuous(limits = c(0,100)) + ## set the range of the y axis
+  scale_x_continuous(limits = c(0, 2000)) +
+  ylab("Hydrolysis extent (%)") + ## change the label for the y axis
+  xlab("Time (min)") + ## change the name of the x axis
+  theme(legend.title = element_blank(),
+        panel.grid = element_blank(),
+        axis.line = element_line(colour = "black", size = 0.5)，
+        panel.background = element_rect(fill = "white"),
+        axis.ticks=element_line(
+          colour="black",
+          size=.5)) +
+  labs(x = "Time (min)", y = "Hydrolysis extent (%)") +
+  theme(axis.text.x = element_text(color="black", size=10), 
+        axis.text.y = element_text(color="black", size=10)) +
+  scale_color_discrete(labels = c("Negtive control", "Sample", "Positive control")) +
+  theme(legend.key = element_blank(),
+        legend.position = "bottom")
+
+
+```
+
+
