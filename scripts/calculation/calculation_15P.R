@@ -1,6 +1,8 @@
 
 # use the average of the Slope by plate and the average of all the blk within each plate
 
+#################################### calculate the [reducing sugar] and the hydrolysis extent ####################################################
+
 library(tidyverse)
 
 # import the joined dataset
@@ -32,3 +34,25 @@ data_15P_cal <- data_cal %>%
 # save the calculated dataset
 
 write_csv(data_15P_cal, "data/tidydata/data_15P_cal.csv")
+
+######################################### calculate the mean, sd and cov #######################################################################
+
+var <- data_15P_outlier_deleted %>% 
+  group_by(Sample, Time) %>% 
+  summarise(mean_HE = mean(HE, na.rm = TRUE), sd_HE = sd(HE, na.rm = TRUE), cov = sd_HE / mean_HE * 100)
+
+# save the variation
+
+write_csv(var, "analysis/variation_15P.csv")
+
+######################################### calculate the mean HE by Sample and Time #################################################################
+
+
+## to be done
+
+df <- cal_6P_3nd %>% 
+  group_by(Sample, Time) %>% 
+  summarise(mean_HE = mean(HE, na.rm = TRUE), # calculating the mean values
+            sd_HE = sd(HE, na.rm = TRUE), # calculating the standard error 
+            cov = sd_HE / mean_HE *100) # calculating the coefficient of variance
+# NaN means that the sample hasn't been repeated
