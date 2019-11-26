@@ -37,13 +37,28 @@ write_csv(data_15P_cal, "data/tidydata/data_15P_cal.csv")
 
 ######################################### calculate the mean, sd and cov #######################################################################
 
-var <- data_15P_outlier_deleted %>% 
+df <- read_csv("data/tidydata/data_15P_outlier_deleted.csv")
+
+var <- df %>% 
   group_by(Sample, Time) %>% 
-  summarise(mean_HE = mean(HE, na.rm = TRUE), sd_HE = sd(HE, na.rm = TRUE), cov = sd_HE / mean_HE * 100)
+  summarise(mean_HE = mean(HE, na.rm = TRUE), sd_HE = sd(HE, na.rm = TRUE), cov = sd_HE / mean_HE * 100) 
+
+# change the type of the Sample column (dbl to chr)
+
+var <- var %>% 
+  mutate(Sample = as.character(Sample))
 
 # save the variation
 
 write_csv(var, "analysis/variation_15P.csv")
+
+# combine the variation with the replicate's dataset
+
+data_15P_var <- left_join(df, var)
+
+# save the joined dataset
+
+write_csv(data_15P_var, "analysis/data_15P_var.csv")
 
 ######################################### calculate the mean HE by Sample and Time #################################################################
 
@@ -56,3 +71,9 @@ df <- cal_6P_3nd %>%
             sd_HE = sd(HE, na.rm = TRUE), # calculating the standard error 
             cov = sd_HE / mean_HE *100) # calculating the coefficient of variance
 # NaN means that the sample hasn't been repeated
+
+## draft
+
+x <- df %>% 
+  group_by(Sample, Time) %>% 
+  summarise(mean_HE = mean(HE, na.rm = TRUE))
