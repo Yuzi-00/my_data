@@ -204,7 +204,7 @@ data_15P_outlier_deleted <- read_csv("data/tidydata/data_15P_outlier_deleted.csv
 
 #############
 
-pdf(file = "figures/digestibility.pdf") # creating a pdf file and senting all the plot below to this file
+pdf(file = "figures/digestibility_individual plot.pdf") # creating a pdf file and senting all the plot below to this file
 for(i in unique(data_15P_outlier_deleted$Sample)){ # i stands for each item within this dataset
   # unique() can show all the Sample names here whithin the mean_HE_6P dataset 
   digestibility <- data_15P_outlier_deleted %>% 
@@ -217,8 +217,8 @@ for(i in unique(data_15P_outlier_deleted$Sample)){ # i stands for each item with
     geom_line() +
     geom_point() +
     ggtitle(i) + # set the title for each plot as i 
-    scale_y_continuous(limits = c(0,100)) + ## set the range of the y axis
-    scale_x_continuous(limits = c(0, 2000)) +
+    scale_y_continuous(limits = c(0,100), expand = c(0, 0)) + ## set the range of the y axis
+    scale_x_continuous(limits = c(0, 2000), expand = c(0, 0)) +
     theme( # remove the legend
           panel.grid = element_blank(), # remove the grid 
           axis.line = element_line(colour = "black", size = 0.5), # add the x axis
@@ -229,18 +229,67 @@ for(i in unique(data_15P_outlier_deleted$Sample)){ # i stands for each item with
     labs(x = "Time (min)", y = "Hydrolysis extent (%)") +
     # change the title of the x and y axis
     theme(axis.text.x = element_text(color="black", size=10), 
-          axis.text.y = element_text(color="black", size=10))
+          axis.text.y = element_text(color="black", size=10)) +
   # change the color and size of the tick label for x and y axis
+    theme(plot.margin = unit(c(5.5,12,5.5,5.5), "pt"))
   print(digestibility) # print out the plots
 } 
 dev.off() # stop sending plot to the pdf file
 
 ######################################## individual plot with the error bar ######################################################################
 
-# import the dataset and add a new colume 
+# import the variation dataset (noted that the outliers had already been removed from this dataset)
 
-var <- read_csv("analysis/variation_15P.csv") 
-# Warning: 36 parsing failures ?????????????????????????????????????????????
+total_data <- read_csv("analysis/data_15P_var.csv")
+
+# creat the loop
+
+pdf(file = "figures/digestibility_individual plot with error bar.pdf") # creating a pdf file and senting all the plot below to this file
+for(i in unique(total_data$Sample)){ # i stands for each item within this dataset
+  # unique() can show all the Sample names here whithin the mean_HE_6P dataset 
+  digestibility_var <- total_data %>% 
+    filter(Sample == i) %>% # pipe this to the first argument on the right side 
+    # here, the first argument of ggplot is the data, otherwise, we have to type ggplot(data = .)
+    # to let it pipe to this argument
+    ggplot() + 
+    geom_line(aes(x = Time,
+                  y = mean_HE,
+                  group = Plate),
+              color = "red",
+              size = 0.05) +
+    geom_errorbar(aes(x = Time, ymin=mean_HE - sd_HE, ymax=mean_HE + sd_HE), 
+                  width=20,
+                  color = "red") +
+    geom_point(aes(x = Time, 
+                   y = HE),
+               shape = 1,
+               alpha = 0.2,
+               size = 1) +
+    geom_line(aes(x = Time,
+                  y = HE,
+                  group = Plate),
+              size = 0.005,
+              alpha = 0.2) +
+    ggtitle(i) + # set the title for each plot as i 
+    scale_y_continuous(limits = c(0,100), expand = c(0, 0)) + ## set the range of the y axis
+    scale_x_continuous(limits = c(0, 2000), expand = c(0, 0)) +
+    theme( # remove the legend
+      panel.grid = element_blank(), # remove the grid 
+      axis.line = element_line(colour = "black", size = 0.5), # add the x axis
+      panel.background = element_rect(fill = "white", color = "black"),
+      #change the backgroud color to white and the frame color to black
+      axis.ticks = element_line(colour="black", size=.5)) +
+    # change the color of the ticks into black and the size to 0.5
+    labs(x = "Time (min)", y = "Hydrolysis extent (%)") +
+    # change the title of the x and y axis
+    theme(axis.text.x = element_text(color="black", size=10), 
+          axis.text.y = element_text(color="black", size=10)) +
+  # change the color and size of the tick label for x and y axis
+    theme(plot.margin = unit(c(5.5,12,5.5,5.5), "pt"))
+  print(digestibility_var) # print out the plots
+} 
+dev.off() # stop sending plot to the pdf file
+
 
 
 
