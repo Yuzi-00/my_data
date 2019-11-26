@@ -143,7 +143,7 @@ joined_15P_with_mass_slope_id <- left_join(joined_15P_with_mass_slope, design_na
 # reordering the column names
 
 joined_15P_with_mass_slope_id <- select(joined_15P_with_mass_slope_id, Plate, Row, ColPair, Column, Sample, ID, WellGroup, WellGroupType, 
-                        Mass_sample, Time, OD_sample, Mass_blk, OD_blk, Slope_Day1, Slope_Day2)
+                        Mass_sample, Time, OD_sample, Mass_blk, OD_blk, mean_slope)
 # ordering the cols
 
 write_csv(joined_15P_with_mass_slope_id, "data/tidydata/joined_15P_with_mass_slope_id.csv")
