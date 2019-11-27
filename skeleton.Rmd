@@ -36,7 +36,7 @@ Hi, I'm Yuzi, a phD student in the cereal quality group of Agriculture & food. W
 
 # My Project
 
-The project is about modelling the degradation of wheat starch. Hundreds of starches from the MAGIC (Multiparent advanced generation intercross) population are being used for measuring the degradability and also some other structural properties. The end goal is to built a model that predict the degradability of wheat starch from the structural properties.   
+The project is about modelling the degradation of wheat starch. Hundreds of starches from the MAGIC (Multiparent Advanced Generation Intercross) population are being used for measuring the degradability and also some other structural properties. The end goal is to built a model that predict the degradability of wheat starch from the structural properties.   
 
 ## Preliminary results
 
@@ -79,7 +79,7 @@ mydata <- read_csv("data/tidydata/joined_6P_update.csv") %>%
 ## Favourite tool 
 
 - ggplot2
-- can't wait to learn Shiny
+- want to learn more about Shiny
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![](https://raw.githubusercontent.com/tidyverse/ggplot2/master/man/figures/logo.png){width=70px}
 ![](https://teachdatascience.com/post/shiny1/shinyhex.jpg){width=70px}
@@ -163,11 +163,11 @@ The heatmap is to explore the spatial variability across the plates at different
 # My time went ...
 
 - tidying the data (the most time-consuming part)
-- checking the spatial variability across the plates (heatmap)
-- plotting the experimental results (fig.1)
+- checking the spatial variability across the plates (fig.1)
+- plotting the experimental results (fig.2)
 - curve fitting 
 - exporting all the estimated parameters from the model
-- plotting the fitted values (fig.2)
+- plotting the fitted values (fig.3)
 
 <style> 
 .column-left{float: left; width: 50%; text-align: left;}
@@ -289,8 +289,22 @@ x <- expanded %>%
                  group = Well,
                  color = status),
              size = 1, shape = 1) + ## use hollow circles by "shape = 1"
-
+    geom_line(data = x,
+          aes(x = Time,
+              y = fitted_HE,
+              group = Well,
+              color = status),
+          size = 0.05) +
  # make the line thinner
+    #if we want to add transparancy to the Samples (try the lines below)
+    #geom_line(data = x,
+          #aes(x = Time,
+             # y = fitted_HE,
+              #group = Well,
+              #color = status,
+             # alpha = status == "Sample"),
+          #size = 0.05) +
+  scale_alpha_manual(values = c(1, 0.1)) + # c(FALSE, TRUE)
   scale_color_manual(values = c("#e41a1c", "#4daf4a", "#377eb8")) +
   scale_y_continuous(limits = c(0,100), expand = c(0, 0)) + ## set the range of the y axis with no more expand
   scale_x_continuous(breaks = c(500, 1500),
@@ -328,6 +342,7 @@ theme(legend.title = element_blank(),
 
 # Next steps
 
+- Looking for the potential outliers
 - Try other mathematical equations to do the curve fitting, compare the goodness of fitting among them
 - Establishing a predictive model using the Partial least squares (PLS) regression
 
