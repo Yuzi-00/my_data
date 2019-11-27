@@ -32,7 +32,7 @@ text-align: justify}
 
 # Introduction
 
-I'm Yuzi, a phD student in the cereal quality group of Ag & food. Without any programming experience before, the data school is sort of a whole new world for me, and it turned out to be very intereting and I'm keen to learn more.
+Hi, I'm Yuzi, a phD student in the cereal quality group of Agriculture & food. Without any programming experience before, the data school is sort of a whole new world for me, and it turned out to be very intereting and I'm keen to learn more.
 
 # My Project
 
@@ -40,7 +40,7 @@ The project is about modelling the degradation of wheat starch. Hundreds of star
 
 ## Preliminary results
 
-The current dataset is a combination of my experimental results (hydrolysis) on 200 wheat starch and also some previous results from other people regarding to the structural properties. The hydrolysis assay was done in microplates, it's an enzymatic reaction over 30 hours with several sampling from time to time.
+The current dataset is a combination of my experimental results (hydrolysis) on morn than 200 wheat starch with some previous results from other people regarding to the structural properties. The hydrolysis assay was done in microplates, it's an enzymatic reaction over 30 hours during which 9 times of sampling was done. 
 
 <br/>
 
@@ -84,7 +84,7 @@ knitr::kable(head(mydata, n = 5), format = "html", align = 'c', caption = "Struc
 
 </div>
 
-<div class="column-right"> 
+<div class="column-right" style='text-align: justify'> 
 
 ```{r heatmap-plot, out.width='100%', fig.align='center', fig.height= 4, fig.width=4, fig.dpi = 300, fig.cap="Spatial variability across the plates"}
 
@@ -98,7 +98,7 @@ data_6P <- read_csv("data/tidydata/data_6P_cal_3nd.csv")
 data_selected <- data_6P %>% 
   filter(Sample != "C+" & Sample != "C-") %>%  # remove the control samples 
   select(Plate, Row, Col, Time, HE) %>% 
-  rename(Column = Col) %>% 
+  rename(Column = Col) %>%
   filter(Time == 0 | Time == 120 | Time == 240 | Time == 360 | Time == 1440 |Time == 1800) %>% 
   mutate_each(funs(replace(., .<0, 0))) # replace the negtive values by 0
 
@@ -140,11 +140,6 @@ data_t0 %>%
 ```
 
 <br/>
-
-<style>
-body {
-text-align: justify}
-</style>
 
 The heatmap is to explore the spatial variability across the plates at different time points, and also to find potential outliers. For example the figure above shows the hydrolysis extent of the first six plates at 360 minutes. The white blocks are the empty samples, missing  values and very few outliers. As we can see here, the color are randomly distributed, no patterns can be found, which is good. The plate 3 and 6 tend to have higher intensity than the others, whether it's due to the variation of the experimental conditions (temperature, enzymatic activity...) or the difference between samples need to be checked later on.     
 
@@ -286,12 +281,8 @@ x <- expanded %>%
                  group = Well,
                  color = status),
              size = 1, shape = 1) + ## use hollow circles by "shape = 1"
-    geom_line(data = x,
-          aes(x = Time,
-              y = fitted_HE,
-              group = Well,
-              color = status),
-          size = 0.05) + # make the line thinner
+     
+ # make the line thinner
   scale_color_manual(values = c("#e41a1c", "#4daf4a", "#377eb8")) +
   scale_y_continuous(limits = c(0,100), expand = c(0, 0)) + ## set the range of the y axis with no more expand
   scale_x_continuous(breaks = c(500, 1500),
@@ -329,7 +320,7 @@ theme(legend.title = element_blank(),
 
 # Next steps
 
-- Try other mathematical equation to do the curve fitting, compare the goodness of fitting
+- Try other mathematical equations to do the curve fitting, compare the goodness of fitting among them
 - Establishing a predictive model using the Partial least squares (PLS) regression
 
 &nbsp;
@@ -341,7 +332,7 @@ theme(legend.title = element_blank(),
 
 # My Data School Experience
 
-It's an awesome learning experience. With a nice pace, the explanation in detail and lots of practical days, I start to see the beauty of R and really enjoy exploring it. I've already applied what I've learnt in data school to my daily work, and it's always exciting to discover more packages and codes that help us solve various problems. 
+It's an awesome learning experience, the nice pace made it easy to follow. I've already applied what I've learnt in data school to my daily work, and it's always exciting to learn and explore more R codes that help us solve various problems. 
 
 
 
