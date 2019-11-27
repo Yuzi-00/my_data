@@ -1,5 +1,5 @@
 ---
-title: Modelling the hydrolysis of wheat starch
+title: Modelling the degradability of wheat starch
 subtitle: 
 author:  Yuzi Wang
 affiliation: CSIRO Agriculture & food
@@ -50,8 +50,9 @@ The current dataset is a combination of my experimental results (hydrolysis) on 
 mydata <- read_csv("data/tidydata/joined_6P_update.csv") %>% 
   select(Sample, ID, Time, Hydro_extent, Amylose_content, D1, D5, D9, mean_Peak, mean_Trough, mean_Final, low_dp, medium_dp, high_dp)
 
-knitr::kable(head(mydata, n = 5), format = "html", align = 'c', caption = "Structural and functional properties of wheat starch") %>% 
+  knitr::kable(head(mydata, n = 5), format = "html", align = 'c', caption = "Structural and functional properties of wheat starch") %>% 
   kable_styling("striped", font_size = 10)
+
 ```
 
 <style> 
@@ -69,6 +70,7 @@ knitr::kable(head(mydata, n = 5), format = "html", align = 'c', caption = "Struc
 - Tidyverse (dplyr, ggplot2...)
 - Knitr
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 ![](resources/img/tidyverse.png){width=80px}
 ![](https://ih0.redbubble.net/image.543341178.1637/flat,800x800,070,f.jpg){width=70px}
 
@@ -79,14 +81,18 @@ knitr::kable(head(mydata, n = 5), format = "html", align = 'c', caption = "Struc
 - ggplot2
 - can't wait to learn Shiny
 
-&nbsp; ![](https://raw.githubusercontent.com/tidyverse/ggplot2/master/man/figures/logo.png){width=70px}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![](https://raw.githubusercontent.com/tidyverse/ggplot2/master/man/figures/logo.png){width=70px}
 ![](https://teachdatascience.com/post/shiny1/shinyhex.jpg){width=70px}
 
 </div>
 
 <div class="column-right" style='text-align: justify'> 
 
-```{r heatmap-plot, out.width='100%', fig.align='center', fig.height= 4, fig.width=4, fig.dpi = 300, fig.cap="Spatial variability across the plates"}
+<br/>
+<br/>
+
+
+```{r heatmap-plot, out.width='80%', fig.align='center', fig.height= 4, fig.width=4, fig.dpi = 300, fig.cap="Spatial variability across the plates", out.extra='frontpage'}
 
 
 # import the dataset
@@ -174,7 +180,7 @@ The heatmap is to explore the spatial variability across the plates at different
 <br/>
 <br/>
 
-```{r standard-plot, out.width='100%', fig.align='center', fig.height= 4, fig.width=4, fig.dpi = 300, fig.cap="Experimental results of the starch hydrolysis extent"}
+```{r standard-plot, out.width='80%', fig.align='center', fig.height= 4, fig.width=4, fig.dpi = 300, fig.cap="Experimental results of the starch degradability"}
 
 
 # import the dataset and add a new colume
@@ -242,8 +248,10 @@ theme(legend.title = element_blank(),
 <div class="column-right">
 
 <br/>
+<br/>
+<br/>
 
-```{r fitted-HE-plot, out.width='100%', fig.align='center', fig.height= 4, fig.width = 4, fig.dpi = 300, fig.cap="Fitted results of the starch hydrolysis extent"}
+```{r fitted-HE-plot, out.width='80%', fig.align='center', fig.height= 4, fig.width = 4, fig.dpi = 300, fig.cap="Fitted results of the starch degradability"}
 
 # read in the fitted hydrolysis extent dataset
 
@@ -281,7 +289,7 @@ x <- expanded %>%
                  group = Well,
                  color = status),
              size = 1, shape = 1) + ## use hollow circles by "shape = 1"
-     
+
  # make the line thinner
   scale_color_manual(values = c("#e41a1c", "#4daf4a", "#377eb8")) +
   scale_y_continuous(limits = c(0,100), expand = c(0, 0)) + ## set the range of the y axis with no more expand
@@ -332,7 +340,7 @@ theme(legend.title = element_blank(),
 
 # My Data School Experience
 
-It's an awesome learning experience, the nice pace made it easy to follow. I've already applied what I've learnt in data school to my daily work, and it's always exciting to learn and explore more R codes that help us solve various problems. 
+It's an awesome learning experience, the nice pace made it easy to follow. In the past, I thought I would never understand anything about programming, but I finally did it now thanks to the data school. I've gained lots of knowledge and skills regarding the data visualization, data analysis, statistics as well as data management which I've already applied to my daily work, and it's always exciting to learn and explore more R codes that help us solve various problems. 
 
 
 
