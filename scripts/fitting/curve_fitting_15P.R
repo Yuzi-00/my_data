@@ -1,5 +1,7 @@
 
-#                                       **  Using the Weibull function  **              
+#                                       **  Using the Weibull function  **  
+
+#           ** using three replicates separately to generate one single h k and Xinf for each sample **
 
 library(tidyverse)
 
