@@ -1,4 +1,8 @@
 
+
+#                   ** calculate the fitted HE using Weibull function **
+
+
 # read in the dataset of the estimated parameters
 
 parameter <- read_csv("analysis/fitted_Weibull_parameters_15P.csv") 
