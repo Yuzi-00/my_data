@@ -209,7 +209,7 @@ data_15P_outlier_deleted <- read_csv("data/tidydata/data_15P_outlier_deleted.csv
 
 #############
 
-pdf(file = "figures/digestibility_individual plot.pdf") # creating a pdf file and senting all the plot below to this file
+pdf(file = "figures/degradability_individual plot.pdf") # creating a pdf file and senting all the plot below to this file
 for(i in unique(data_15P_outlier_deleted$Sample)){ # i stands for each item within this dataset
   # unique() can show all the Sample names here whithin the mean_HE_6P dataset 
   digestibility <- data_15P_outlier_deleted %>% 
@@ -249,7 +249,7 @@ total_data <- read_csv("analysis/data_15P_var.csv")
 
 # creat the loop
 
-pdf(file = "figures/digestibility_individual plot with error bar.pdf") # creating a pdf file and senting all the plot below to this file
+pdf(file = "figures/degradability_individual plot with error bar.pdf") # creating a pdf file and senting all the plot below to this file
 for(i in unique(total_data$Sample)){ # i stands for each item within this dataset
   # unique() can show all the Sample names here whithin the mean_HE_6P dataset 
   digestibility_var <- total_data %>% 
