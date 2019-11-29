@@ -14,12 +14,12 @@ data_selected <- data_15P %>%
 
 # 0min
 
-data_0min <- data_selected %>% 
+data_0 <- data_selected %>% 
   filter(Time == 0)
 
 ### plotting
 
-data_0min <- data_0min %>% 
+data_0min <- data_0 %>% 
   ggplot(aes(x = Column, y = Row, fill = HE)) + 
   scale_fill_continuous(name = "Hydrolysis extent", type = "viridis") + # set the legend title and the fill 
   scale_x_continuous(breaks = c(1, 3, 5, 7, 9, 11)) +
@@ -43,11 +43,11 @@ ggsave("figures/heatmap_0min.png",
 
 # 20min
 
-data_20min <- data_selected %>% 
+data_20 <- data_selected %>% 
   filter(Time == 20) 
 ### plotting
 
-data_20min <- data_20min %>% 
+data_20min <- data_20 %>% 
   ggplot(aes(x = Column, y = Row, fill = HE)) + 
   scale_fill_continuous(name = "Hydrolysis extent", type = "viridis") + # set the legend title and the fill 
   scale_x_continuous(breaks = c(1, 3, 5, 7, 9, 11)) +
@@ -71,12 +71,12 @@ ggsave("figures/heatmap_20min.png",
 
 # 60min
 
-data_60min <- data_selected %>% 
+data_60 <- data_selected %>% 
   filter(Time == 60) 
 
 ### plotting
 
-data_60min <- data_60min %>% 
+data_60min <- data_60 %>% 
   ggplot(aes(x = Column, y = Row, fill = HE)) + 
   scale_fill_continuous(name = "Hydrolysis extent", type = "viridis") + # set the legend title and the fill 
   scale_x_continuous(breaks = c(1, 3, 5, 7, 9, 11)) +
@@ -100,12 +100,12 @@ ggsave("figures/heatmap_60min.png",
 
 # 120min
 
-data_120min <- data_selected %>% 
+data_120 <- data_selected %>% 
   filter(Time == 120) 
 
 ### plotting
 
-data_120min <- data_120min %>% 
+data_120min <- data_120 %>% 
   ggplot(aes(x = Column, y = Row, fill = HE)) + 
   scale_fill_continuous(name = "Hydrolysis extent", type = "viridis") + # set the legend title and the fill 
   scale_x_continuous(breaks = c(1, 3, 5, 7, 9, 11)) +
@@ -129,11 +129,11 @@ ggsave("figures/heatmap_120min.png",
 
 # 180min
 
-data_180min <- data_selected %>% 
+data_180 <- data_selected %>% 
   filter(Time == 180) 
 ### plotting
 
-data_180min <- data_180min %>% 
+data_180min <- data_180 %>% 
   ggplot(aes(x = Column, y = Row, fill = HE)) + 
   scale_fill_continuous(name = "Hydrolysis extent", type = "viridis") + # set the legend title and the fill 
   scale_x_continuous(breaks = c(1, 3, 5, 7, 9, 11)) +
@@ -156,12 +156,12 @@ ggsave("figures/heatmap_180min.png",
 
 # 240min
 
-data_240min <- data_selected %>% 
+data_240 <- data_selected %>% 
   filter(Time == 240) 
 
 ### plotting
 
-data_240min <- data_240min %>% 
+data_240min <- data_240 %>% 
   ggplot(aes(x = Column, y = Row, fill = HE)) + 
   scale_fill_continuous(name = "Hydrolysis extent", type = "viridis") + # set the legend title and the fill 
   scale_x_continuous(breaks = c(1, 3, 5, 7, 9, 11)) +
@@ -184,12 +184,12 @@ ggsave("figures/heatmap_240min.png",
 
 # 360min
 
-data_360min <- data_selected %>% 
+data_360 <- data_selected %>% 
   filter(Time == 360)
 
 ### plotting
 
-data_360min <- data_360min %>% 
+data_360min <- data_360 %>% 
   ggplot(aes(x = Column, y = Row, fill = HE)) + 
   scale_fill_continuous(name = "Hydrolysis extent", type = "viridis") + # set the legend title and the fill 
   scale_x_continuous(breaks = c(1, 3, 5, 7, 9, 11)) +
@@ -212,12 +212,12 @@ ggsave("figures/heatmap_360min.png",
 
 # 1440min
 
-data_1440min <- data_selected %>% 
+data_1440 <- data_selected %>% 
   filter(Time == 1440) 
 
 ### plotting
 
-data_1440min <- data_1440min %>% 
+data_1440min <- data_1440 %>% 
   ggplot(aes(x = Column, y = Row, fill = HE)) + 
   scale_fill_continuous(name = "Hydrolysis extent", type = "viridis") + # set the legend title and the fill 
   scale_x_continuous(breaks = c(1, 3, 5, 7, 9, 11)) +
@@ -240,12 +240,12 @@ ggsave("figures/heatmap_1440min.png",
 
 # 1800min
 
-data_1800min <- data_selected %>% 
+data_1800 <- data_selected %>% 
   filter(Time == 1800)
 
 ### plotting
 
-data_1800min <- data_1800min %>% 
+data_1800min <- data_1800 %>% 
   ggplot(aes(x = Column, y = Row, fill = HE)) + 
   scale_fill_continuous(name = "Hydrolysis extent", type = "viridis") + # set the legend title and the fill 
   scale_x_continuous(breaks = c(1, 3, 5, 7, 9, 11)) +
@@ -268,6 +268,6 @@ ggsave("figures/heatmap_1800min.png",
 
 # check the number of the observation
 
-with(data_t,table(Column, Row, Plate)) # one observation/col/row/per
+with(data_1800,table(Column, Row, Plate)) # one observation/col/row/per
 
 
