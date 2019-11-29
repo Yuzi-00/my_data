@@ -73,6 +73,11 @@ data_15P_outlier_deleted <- data_15P %>%
   filter(!(Time == 20 & Sample == 127 & HE > 11)) %>% 
   filter(!(Time == 0 & Sample == 96 & HE > 9))
 
+# also, the sample 113 in plate 12 at time 1440 and 1800 have a HE > 100, remove this one as well
+
+data_15P_outlier_deleted <- data_15P_outlier_deleted %>% 
+  filter(!(Plate == 12 & Sample == "113"))
+
 # save the dataset without the outlier (208 at t20min)
 
 write_csv(data_15P_outlier_deleted, "data/tidydata/data_15P_outlier_deleted.csv")
