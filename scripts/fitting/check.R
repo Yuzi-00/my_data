@@ -114,3 +114,174 @@ plate11 %>%
 # all right...Coming back from the lab, I saved the wrong spreadsheet for plate 11 at 240min, glad I found it out 
 
 # and now we can correct the mistake
+
+
+#                        ** check other points **
+
+# find the lowest value at 180min
+
+arrange <- data_15P %>% 
+  filter(Time == 180) %>% 
+  arrange(HE) # 2 very low values here: 92 in plate 1 and 136 in plate 13
+
+# draw the line plot for sample 92 and 136
+
+Sample_136 <- data_15P %>% 
+  filter(Sample == 136) %>% 
+  mutate(Well = paste(Plate, Row, Column, sep = "_"))
+
+ggplot(data = Sample_136, 
+       aes(x = Time, 
+           y = HE,
+           group = Well,
+           color = as.factor(Plate))) + # colored by the status (distinguish the control from the other samples)
+  geom_point(size = 1, shape = 1) + # add the transparency
+  geom_line(size = 0.005) +
+  scale_y_continuous(limits = c(0,100)) + ## set the range of the y axis
+  scale_x_continuous(limits = c(0, 2000)) +
+  ylab("Hydrolysis extent (%)") + ## change the label for the y axis
+  xlab("Time (min)") + ## change the name of the x axis
+  theme(legend.title = element_blank(),
+        panel.grid = element_blank(),
+        axis.line = element_line(colour = "black", size = 0.5)，
+        panel.background = element_rect(fill = "white"),
+        axis.ticks=element_line(
+          colour="black",
+          size=.5)) +
+  labs(x = "Time (min)", y = "Hydrolysis extent (%)") +
+  theme(axis.text.x = element_text(color="black", size=10), 
+        axis.text.y = element_text(color="black", size=10)) +
+  scale_color_discrete(labels = c("Negtive control", "Sample", "Positive control")) +
+  theme(legend.key = element_blank(),
+        legend.position = "bottom")
+# according to the plot, the values of the plate 13 at 120min and 180min seems quite similar
+# let's have a look of plate 13 
+
+# read in the data of the plate 13
+
+df <- read_csv("data/tidydata/data_15P_cal.csv")
+
+Sample136 <- df %>% 
+  filter(Time == 120 | Time == 180) %>% 
+  filter(Sample == "136")
+# yes, they are very close, but they are different valaues, seems no problem
+
+# let's check that indivudual plot and find if there are other weird looking samples 
+
+# yes, several samples might have some problems 
+
+# wrong connecting lines : Sample 82*, 
+
+# let's check sample 82*
+
+Sample81 <- data_15P %>% 
+  filter(Sample == "82*") %>% 
+  filter(!is.na(HE)) %>% # remove the NAs
+  mutate(Well = paste(Plate, Row, Column, sep = "_"))
+
+ggplot(data = Sample81, 
+      aes(x = Time, 
+          y = HE,
+          group = Well,
+          color = as.factor(Plate))) + # colored by the status (distinguish the control from the other samples)
+  geom_point(size = 1, shape = 1) + # add the transparency
+  geom_line(size = 0.005) +
+  scale_y_continuous(limits = c(0,100)) + ## set the range of the y axis
+  scale_x_continuous(limits = c(0, 2000)) +
+  ylab("Hydrolysis extent (%)") + ## change the label for the y axis
+  xlab("Time (min)") + ## change the name of the x axis
+  theme(legend.title = element_blank(),
+        panel.grid = element_blank(),
+        axis.line = element_line(colour = "black", size = 0.5)，
+        panel.background = element_rect(fill = "white"),
+        axis.ticks=element_line(
+          colour="black",
+          size=.5)) +
+  labs(x = "Time (min)", y = "Hydrolysis extent (%)") +
+  theme(axis.text.x = element_text(color="black", size=10), 
+        axis.text.y = element_text(color="black", size=10)) +
+  scale_color_discrete(labels = c("Negtive control", "Sample", "Positive control")) +
+  theme(legend.key = element_blank(),
+        legend.position = "bottom")
+# this plot is ok
+# the previous saved line plot was wrong due to the wrong grouping 
+# should group by Well not by Plate 
+# ok, this problem is solved
+
+#                         ** samples remained to check **
+
+#                           ** 103, 134, 127, 165,26,136 **
+
+#                           ** let's check one by one **
+
+# check sample 103 at 180 and 240min
+
+Sample103 <- data_15P_outlier_deleted %>% 
+  filter(Sample == "103") %>% 
+  filter(Time == 180 | Time == 240) # the weird one is Well 11_C_11
+
+# let's go back and check the raw data at this Well
+
+# after checking, the 11_C_11 at 180min is too high, must be contaminated
+# and so this one should be replaced by NA or removed from the dataset
+
+# check sample 134 at 240 and 360min | 120 and 180min
+
+Sample134 <- data_15P_outlier_deleted %>% 
+  filter(Sample == "134") %>% 
+  filter(Time == 240 | Time == 360) # the problem came from Well 11_E_9
+
+# let's go back and check the raw data at this Well
+
+# after checking, the 11_E_9 at 360min is too low, unknown reason
+# and so this one should be replaced by NA or removed from the dataset
+
+Sample134_bis <- data_15P_outlier_deleted %>% 
+  filter(Sample == "134") %>% 
+  filter(Time == 120 | Time == 180)
+
+# after recheck, the 11_E_9 ar 180min is too low too, let's remove this as well
+
+# check sample 127 at 120 and 180min
+
+Sample127 <- data_15P_outlier_deleted %>% 
+  filter(Sample == "127") %>% 
+  filter(Time == 120 | Time == 180) # the problem came from Well 13_C_11
+
+# let's go back and check the raw data at this Well
+
+# after checking, the 13_C_11 at 120min is too high, must be contaminated 
+# and so this one should be replaced by NA or removed from the dataset
+
+# check sample 165 at 180 and 240min
+
+Sample165 <- data_15P_outlier_deleted %>% 
+  filter(Sample == "165") %>% 
+  filter(Time == 180 | Time == 240) # the problem came from Well 8_G_5
+
+# let's go back and check the raw data at this Well
+
+# after checking, the 8_G_5 at 180min is too high, must be contaminated 
+# and so this one should be replaced by NA or removed from the dataset
+
+# check sample 26 at 240 and 360min
+
+Sample26 <- data_15P_outlier_deleted %>% 
+  filter(Sample == "26") %>% 
+  filter(Time == 240 | Time == 360) # the problem came from Well 10_E_9
+
+# let's go back and check the raw data at this Well
+
+# after checking, the 10_E_9 at 360min is too low, unknown reason 
+# and so this one should be replaced by NA or removed from the dataset
+
+# check sample 136 at 120 and 180min
+
+Sample136 <- data_15P_outlier_deleted %>% 
+  filter(Sample == "136") %>% 
+  filter(Time == 120 | Time == 180) # the problem came from Well 13_G_3
+
+# let's go back and check the raw data at this Well
+
+# after checking, the 13_G_3 at 180min is too low, unknown reason 
+# and so this one should be replaced by NA or removed from the dataset
