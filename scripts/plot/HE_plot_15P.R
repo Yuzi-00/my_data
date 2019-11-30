@@ -207,6 +207,11 @@ ggsave("figures/line-plot_15P.png",
 
 data_15P_outlier_deleted <- read_csv("data/tidydata/data_15P_outlier_deleted.csv")
 
+# add a new column to distinguish each replicates 
+
+data_15P_outlier_deleted <-  data_15P_outlier_deleted %>% 
+  mutate(Well = paste(Plate, Row, Column, sep = "_"))
+
 #############
 
 pdf(file = "figures/degradability_individual plot.pdf") # creating a pdf file and senting all the plot below to this file
@@ -218,7 +223,7 @@ for(i in unique(data_15P_outlier_deleted$Sample)){ # i stands for each item with
     # to let it pipe to this argument
     ggplot(aes(x = Time, 
                y = HE,
-               group = Plate)) + 
+               group = Well)) + 
     geom_line() +
     geom_point() +
     ggtitle(i) + # set the title for each plot as i 
@@ -247,6 +252,11 @@ dev.off() # stop sending plot to the pdf file
 
 total_data <- read_csv("analysis/data_15P_var.csv")
 
+# add a new column to distinguish each replicates 
+
+total_data <-  total_data %>% 
+  mutate(Well = paste(Plate, Row, Column, sep = "_"))
+
 # creat the loop
 
 pdf(file = "figures/degradability_individual plot with error bar.pdf") # creating a pdf file and senting all the plot below to this file
@@ -259,7 +269,7 @@ for(i in unique(total_data$Sample)){ # i stands for each item within this datase
     ggplot() + 
     geom_line(aes(x = Time,
                   y = mean_HE,
-                  group = Plate),
+                  group = Well),
               color = "red",
               size = 0.05) +
     geom_errorbar(aes(x = Time, ymin=mean_HE - sd_HE, ymax=mean_HE + sd_HE), 
