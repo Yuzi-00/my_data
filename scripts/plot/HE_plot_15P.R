@@ -71,7 +71,14 @@ data_15P_outlier_deleted <- data_15P %>%
   filter(!(Time == 20 & Sample == 13 & HE > 29)) %>% 
   filter(!(Time == 20 & Sample == 118 & HE > 16)) %>% 
   filter(!(Time == 20 & Sample == 127 & HE > 11)) %>% 
-  filter(!(Time == 0 & Sample == 96 & HE > 9))
+  filter(!(Time == 0 & Sample == 96 & HE > 9)) %>% 
+  filter(!(Time == 180 & Sample == 103 & HE >40)) %>% # remove sample 103 in plate 11 at 180min
+  filter(!(Time == 360 & Sample == 134 & HE < 35)) %>% # remove sample 134 in plate 11 at 360min
+  filter(!(Time == 120 & Sample == 127 & HE > 29)) %>% # remove sample 127 in plate 13 at 120min
+  filter(!(Time == 180 & Sample == 165 & HE > 30)) %>%  # remove sample 165 in plate 8 at 180min
+  filter(!(Time == 360 & Sample == 26 & HE < 37)) %>%  # remove sample 26 in plate 10 at 360min
+  filter(!(Time == 180 & Sample == 134 & HE < 23)) %>% # remove sample 134 in plate 11 at 180min
+  filter(!(Time == 180 & Sample == 136 & HE < 19)) # remove sample 136 in plate 13 at 180min
 
 # also, the sample 113 in plate 12 at time 1440 and 1800 have a HE > 100, remove this one as well
 
